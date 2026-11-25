@@ -64,12 +64,17 @@ def score(derived: Path, master: Path, mask: tuple[int, int], scheme: str,
     y0, y1 = mask
     flag = cv2.INPAINT_TELEA if scheme == "opencv_telea" else cv2.INPAINT_NS
     ins, outs, sins = [], [], []
+    black = 0
     for i in idxs:
         cd.set(cv2.CAP_PROP_POS_FRAMES, int(i))
         cm.set(cv2.CAP_PROP_POS_FRAMES, int(i))
         ok1, a = cd.read()
         ok2, b = cm.read()
         if not (ok1 and ok2):
+            continue
+        # 近黑帧：擦完还是黑 → PSNR 恒 99dB，会把均值/中位数都污染 → 剔除并计数
+        if float(np.mean(b)) < 8.0:
+            black += 1
             continue
         m = np.zeros(a.shape[:2], dtype=np.uint8)
         m[y0:y1, :] = 255
@@ -79,9 +84,11 @@ def score(derived: Path, master: Path, mask: tuple[int, int], scheme: str,
         outs.append(psnr(out, b, (0, y0)))
         outs.append(psnr(out, b, (y1, out.shape[0])))
     cd.release(); cm.release()
-    avg = lambda v: round(sum(v) / len(v), 3) if v else None  # noqa: E731
-    return {"psnr_in_mask": avg(ins), "ssim_in_mask": avg(sins),
-            "psnr_out_mask": avg(outs), "frames": len(ins)}
+    # 口径 = 中位数（不是均值）：均值会随采样帧数漂移，见 metrics.subtitle_erase_in_memory docstring
+    med = lambda v: round(float(np.median(v)), 3) if v else None  # noqa: E731
+    return {"psnr_in_mask": med(ins), "ssim_in_mask": med(sins),
+            "psnr_out_mask": med(outs), "frames": len(ins),
+            "frames_black_skipped": black, "agg": "median"}
 
 
 def main():

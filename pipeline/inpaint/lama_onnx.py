@@ -63,11 +63,20 @@ class LamaOnnx:
         return np.transpose(rgb, (2, 0, 1))[None, ...].astype(np.float32)
 
     def _post(self, out: np.ndarray) -> np.ndarray:
+        """输出后处理。
+
+        **关键**：这个 ONNX 图的输出**已经是 0–255**（不是 0–1）。
+        v1 按「输出 0–1」处理 → clip 到 [0,1] 再乘 255 → 全图饱和成白色 →
+        表现为「LaMa 填出一块亮斑」，一度以为是模型在大洞上的失败，
+        实际是自己的后处理错了。
+        判定依据（不靠猜）：拿**非洞区**跟原图比 —— 正确的后处理下应当逐像素一致
+        （PSNR=99），错误的会整片偏色。
+        """
         x = np.transpose(out[0], (1, 2, 0))
         if self.normalize == "imagenet":
             x = x * _STD + _MEAN
-        x = np.clip(x, 0.0, 1.0)
-        return cv2.cvtColor((x * 255).astype(np.uint8), cv2.COLOR_RGB2BGR)
+        x = np.clip(x, 0.0, 255.0)
+        return cv2.cvtColor(x.astype(np.uint8), cv2.COLOR_RGB2BGR)
 
     def inpaint(self, img_bgr: np.ndarray, mask_u8: np.ndarray) -> np.ndarray:
         """img_bgr: HxWx3 uint8；mask_u8: HxW uint8（>0 = 要补的洞）。返回补好的图。"""

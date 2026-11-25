@@ -98,6 +98,23 @@ def psnr(a: np.ndarray, b: np.ndarray, region=None) -> float:
     return round(10 * np.log10((255.0 ** 2) / mse), 2)
 
 
+def psnr_mask(a: np.ndarray, b: np.ndarray, mask: np.ndarray) -> float:
+    """PSNR 只在 mask 覆盖的像素上算（掩膜级指标）。
+
+    为什么需要它：矩形/横带口径里，字幕区绝大部分是**干净背景**（逐像素相同），
+    它会把「字形像素上的误差」稀释掉 —— 同一个引擎，换个区域裁法能差好几 dB。
+    真正该看的是「被字幕盖住的那批像素」修得对不对。
+    """
+    if mask is None or not mask.any():
+        return 99.0
+    a = a[mask > 0].astype(np.float64)
+    b = b[mask > 0].astype(np.float64)
+    mse = float(np.mean((a - b) ** 2))
+    if mse <= 1e-9:
+        return 99.0
+    return round(10 * np.log10((255.0 ** 2) / mse), 2)
+
+
 def ssim(a: np.ndarray, b: np.ndarray, region=None) -> float:
     """SSIM（灰度 + 11x11 高斯窗 sigma=1.5，标准 Wang et al. 2004 口径）。
 

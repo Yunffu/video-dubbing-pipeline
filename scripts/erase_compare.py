@@ -32,7 +32,7 @@ if str(ROOT) not in sys.path:
 import cv2  # noqa: E402
 import numpy as np  # noqa: E402
 
-from eval.metrics import psnr, ssim  # noqa: E402
+from eval.metrics import psnr, psnr_mask, ssim  # noqa: E402
 from pipeline import subtitle_erase as se  # noqa: E402
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -86,7 +86,8 @@ def main():
         "lama/逐文字像素(oracle)": ("lama", "text"),
         "lama/小方块(健全性)": ("lama", "box"),
     }
-    acc = {k: {"in": [], "ssim": [], "out": []} for k in cells}
+    acc = {k: {"in": [], "ssim": [], "out": [], "txt": []} for k in cells}
+    base_txt = []
     black = 0
 
     for i in idxs:
@@ -107,11 +108,14 @@ def main():
         if float(np.mean(b)) < 8.0:      # 近黑帧：PSNR 无意义，单列不计入
             black += 1
             continue
+        # 基线：什么都不做（派生件原样）在字形像素上的 PSNR —— 各方案的天花板参照
+        base_txt.append(psnr_mask(a, b, text_mask))
         for name, (engine, mk) in cells.items():
             out, _ = run_cell(engine, a, b, masks[mk], lama=lama)
             acc[name]["in"].append(psnr(out, b, (y0, y1)))
             acc[name]["ssim"].append(ssim(out, b, (y0, y1)))
             acc[name]["out"].append(psnr(out, b, (0, y0)))
+            acc[name]["txt"].append(psnr_mask(out, b, text_mask))
             if i == idxs[0]:
                 cv2.imwrite(f"_work/erase/{args.case}_{engine}_{mk}.png", out)
 
@@ -119,21 +123,28 @@ def main():
 
     def med(v):
         return round(float(np.median(v)), 3) if v else None
-    print(f"\n{'配置':34s} {'字幕区PSNR':>10s} {'SSIM':>8s} {'区外PSNR':>10s}")
-    print("-" * 68)
+    b_txt = med(base_txt)
+    print(f"\n{'配置':34s} {'字幕区PSNR':>10s} {'SSIM':>8s} {'字形PSNR':>10s} {'Δ字形':>8s} {'区外PSNR':>10s}")
+    print("-" * 86)
+    print(f"{'(基线)不擦除':34s} {'-':>10s} {'-':>8s} {b_txt:>10.2f} {0.0:>8.2f} {'-':>10s}")
     rows = []
     for name in cells:
         d = acc[name]
-        print(f"{name:34s} {med(d['in']):>10.2f} {med(d['ssim']):>8.3f} {med(d['out']):>10.2f}")
+        t = med(d["txt"])
+        print(f"{name:34s} {med(d['in']):>10.2f} {med(d['ssim']):>8.3f} "
+              f"{t:>10.2f} {t - b_txt:>8.2f} {med(d['out']):>10.2f}")
         rows.append({"cell": name, "psnr_in_mask": med(d["in"]),
-                     "ssim_in_mask": med(d["ssim"]), "psnr_out_mask": med(d["out"])})
+                     "ssim_in_mask": med(d["ssim"]),
+                     "psnr_on_text": t, "psnr_on_text_delta": round(t - b_txt, 2),
+                     "psnr_out_mask": med(d["out"])})
 
     print(f"\n（中位数口径；跳过近黑帧 {black} 帧）阈值参考: PSNR≥30dB, SSIM≥0.9")
     print("（oracle mask 只在评测里可用；生产要靠方案 B 的逐文字框检测器）")
+    print("字形PSNR = 只在字幕字形像素上算的 PSNR（真正要修的那批像素）")
 
     payload = {"case": args.case, "band": {"y0": y0, "y1": y1},
                "frames": len(idxs), "frames_black_skipped": black,
-               "agg": "median", "rows": rows}
+               "agg": "median", "baseline_psnr_on_text": b_txt, "rows": rows}
     if args.json:
         p = Path(args.json)
         p.parent.mkdir(parents=True, exist_ok=True)
