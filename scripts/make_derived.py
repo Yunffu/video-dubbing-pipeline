@@ -61,12 +61,64 @@ def probe_wh(path: Path) -> tuple[int, int]:
 
 
 def write_ass(path: Path, w: int, h: int, size: int, align: int,
-              ml: int, mr: int, mv: int, duration: float) -> None:
+              ml: int, mr: int, mv: int, duration: float,
+              pos: tuple[int, int] | None = None) -> None:
+    text = r"\N".join(TEXT_LINES)
+    if pos is not None:
+        # align=5（正中）+ \pos 覆盖标签：把文字块钉在指定坐标，
+        # 否则 ASS 只能相对整屏定位，没法把字幕放到人脸嘴上。
+        text = r"{\pos(%d,%d)}%s" % (pos[0], pos[1], text)
     body = ASS_HEADER.format(w=w, h=h, size=size, outline=max(2, size // 12),
                               align=align, ml=ml, mr=mr, mv=mv,
                               start="0:00:00.00", end=f"0:00:{duration:05.2f}",
-                              text=r"\N".join(TEXT_LINES))
+                              text=text)
     path.write_text(body, encoding="utf-8")
+
+
+def detect_face_anchor(video: Path) -> dict:
+    """在母版上找主脸，返回字幕该压在哪。
+
+    用 YuNet 取最大人脸框 + 嘴部关键点（landmark 3/4 的中点）。
+    为什么不用整屏坐标：人脸字幕的意义就是「字挡住脸」，
+    之前这批素材把字幕烧在画面顶部（align=8 + mv=0.3h），
+    名叫 hard_sub_face 其实没压到脸，等于没测到难点。
+
+    取多帧中位数：人脸会动，取中位框比取首帧稳。
+    """
+    import cv2
+    import numpy as np
+    from check_face import model_path, sample_frames, landmarks_of
+
+    frames, _, _ = sample_frames(video, 16)
+    if not frames:
+        return {"found": False, "error": "读不到帧"}
+    boxes, mouths = [], []
+    for _, fr in frames:
+        h, w = fr.shape[:2]
+        det = cv2.FaceDetectorYN_create(model_path(), "", (w, h), 0.6, 0.3, 5000)
+        _, faces = det.detect(fr)
+        if faces is None or not len(faces):
+            continue
+        b = max(faces, key=lambda x: x[2] * x[3])
+        lm = landmarks_of(b)
+        boxes.append([int(v) for v in b[:4]])
+        mouths.append([(lm[3][0] + lm[4][0]) / 2, (lm[3][1] + lm[4][1]) / 2])
+    if not boxes:
+        return {"found": False, "error": "检不到人脸"}
+    bx, by, bw, bh = np.median(np.array(boxes), axis=0).astype(int)
+    mx, my = np.median(np.array(mouths), axis=0)
+
+    # 字号随脸高缩放：字要盖得住脸，但也不至于大到离谱
+    size = int(max(16, min(bh * 0.30, max(bw * 0.5, bh * 0.30))))
+    size = max(16, min(size, 480))
+    block_h = size * 2 * 1.25          # 两行文字块高度
+    # 文字块中心压到嘴部略下方 → 覆盖嘴和下巴
+    cy = int(my + block_h * 0.12)
+    cx = int(mx)
+    return {"found": True, "box": [int(bx), int(by), int(bw), int(bh)],
+            "mouth": [int(mx), int(my)], "size": size,
+            "pos": (cx, cy), "block_h": block_h,
+            "note": "位置 = 最大人脸的嘴部关键点（多帧中位）"}
 
 
 def main():
@@ -77,7 +129,14 @@ def main():
     ap.add_argument("--outdir", default="assets/derived")
     ap.add_argument("--name", required=True, help="素材名前缀，如 m1_01")
     ap.add_argument("--workdir", default="_work/ass")
+    ap.add_argument("--only", help="只生成指定派生件，逗号分隔："
+                                   "hard_sub_bottom,hard_sub_face,low_bitrate,noisy,mouth_occluded")
     args = ap.parse_args()
+
+    only = {s.strip() for s in args.only.split(",")} if args.only else None
+
+    def want(kind: str) -> bool:
+        return only is None or kind in only
 
     src = Path(args.source)
     outdir = Path(args.outdir)
@@ -92,48 +151,63 @@ def main():
     ).stdout.strip())
 
     # 1) 底部大字硬字幕
-    ass = Path(args.workdir) / f"{args.name}_bottom.ass"
-    write_ass(ass, w, h, size=max(48, h // 12), align=2,
-              ml=60, mr=60, mv=int(h * 0.08), duration=dur)
-    run(["-i", str(src), "-vf", f"ass={ass.as_posix()}",
-         "-c:v", "libx264", "-crf", "20", "-c:a", "aac",
-         str(outdir / f"{args.name}_hard_sub_bottom.mp4")])
+    if want("hard_sub_bottom"):
+        ass = Path(args.workdir) / f"{args.name}_bottom.ass"
+        write_ass(ass, w, h, size=max(48, h // 12), align=2,
+                  ml=60, mr=60, mv=int(h * 0.08), duration=dur)
+        run(["-i", str(src), "-vf", f"ass={ass.as_posix()}",
+             "-c:v", "libx264", "-crf", "20", "-c:a", "aac",
+             str(outdir / f"{args.name}_hard_sub_bottom.mp4")])
 
-    # 2) 字幕压在人脸区域（画面上部）
-    ass2 = Path(args.workdir) / f"{args.name}_face.ass"
-    write_ass(ass2, w, h, size=max(48, h // 12), align=8,
-              ml=60, mr=60, mv=int(h * 0.30), duration=dur)
-    run(["-i", str(src), "-vf", f"ass={ass2.as_posix()}",
-         "-c:v", "libx264", "-crf", "20", "-c:a", "aac",
-         str(outdir / f"{args.name}_hard_sub_face.mp4")])
+    # 2) 字幕压在人脸区域（真的压在嘴/下巴上）
+    anchor: dict = {}
+    if want("hard_sub_face"):
+        anchor = detect_face_anchor(src)
+        ass2 = Path(args.workdir) / f"{args.name}_face.ass"
+        if anchor.get("found"):
+            write_ass(ass2, w, h, size=anchor["size"], align=5,
+                      ml=60, mr=60, mv=0, duration=dur, pos=anchor["pos"])
+        else:
+            # 检不到脸 → 退回顶部居中，但要在产物里留痕，不能静默降级
+            print(f"[warn] {args.name}: 检不到人脸（{anchor.get('error')}），"
+                  f"face 字幕退回顶部居中 —— 该 case 不代表人脸难例")
+            write_ass(ass2, w, h, size=max(48, h // 12), align=8,
+                      ml=60, mr=60, mv=int(h * 0.30), duration=dur)
+        run(["-i", str(src), "-vf", f"ass={ass2.as_posix()}",
+             "-c:v", "libx264", "-crf", "20", "-c:a", "aac",
+             str(outdir / f"{args.name}_hard_sub_face.mp4")])
 
     # 3) 低码率（超分 SR 的输入）
-    run(["-i", str(src), "-b:v", "400k", "-c:a", "aac",
-         str(outdir / f"{args.name}_low_bitrate.mp4")])
+    if want("low_bitrate"):
+        run(["-i", str(src), "-b:v", "400k", "-c:a", "aac",
+             str(outdir / f"{args.name}_low_bitrate.mp4")])
 
     # 4) 强背景噪声（ASR 降级）
-    run(["-i", str(src),
-         "-f", "lavfi", "-i", "anoisesrc=color=white:amplitude=0.08:d=3600",
-         "-filter_complex", "[0:a][1:a]amix=inputs=2:duration=first:weights=1 1[a]",
-         "-map", "0:v", "-map", "[a]",
-         "-c:v", "copy", "-c:a", "aac",
-         str(outdir / f"{args.name}_noisy.mp4")])
+    if want("noisy"):
+        run(["-i", str(src),
+             "-f", "lavfi", "-i", "anoisesrc=color=white:amplitude=0.08:d=3600",
+             "-filter_complex", "[0:a][1:a]amix=inputs=2:duration=first:weights=1 1[a]",
+             "-map", "0:v", "-map", "[a]",
+             "-c:v", "copy", "-c:a", "aac",
+             str(outdir / f"{args.name}_noisy.mp4")])
 
     # 5) 嘴部遮挡（半透明矩形压住画面中下部中央）
-    box_w, box_h = w // 5, h // 6
-    box_x = (w - box_w) // 2
-    box_y = int(h * 0.52)
-    draw = (f"drawbox=x={box_x}:y={box_y}:w={box_w}:h={box_h}:"
-            f"color=black@0.75:t=fill")
-    run(["-i", str(src), "-vf", draw,
-         "-c:v", "libx264", "-crf", "20", "-c:a", "aac",
-         str(outdir / f"{args.name}_mouth_occluded.mp4")])
+    if want("mouth_occluded"):
+        box_w, box_h = w // 5, h // 6
+        box_x = (w - box_w) // 2
+        box_y = int(h * 0.52)
+        draw = (f"drawbox=x={box_x}:y={box_y}:w={box_w}:h={box_h}:"
+                f"color=black@0.75:t=fill")
+        run(["-i", str(src), "-vf", draw,
+             "-c:v", "libx264", "-crf", "20", "-c:a", "aac",
+             str(outdir / f"{args.name}_mouth_occluded.mp4")])
 
     derived = [
         {"type": "hard_sub_bottom", "file": f"{args.name}_hard_sub_bottom.mp4",
          "purpose": "字幕擦除常规难例", "metric": "字幕区域 mask 内 PSNR/SSIM（对母版）"},
         {"type": "hard_sub_face", "file": f"{args.name}_hard_sub_face.mp4",
-         "purpose": "字幕压脸边界难例", "metric": "同上看擦除是否伤及人脸"},
+         "purpose": "字幕压脸边界难例", "metric": "同上看擦除是否伤及人脸",
+         "subtitle_anchor": anchor if want("hard_sub_face") and anchor.get("found") else None},
         {"type": "low_bitrate", "file": f"{args.name}_low_bitrate.mp4",
          "purpose": "超分 SR 的输入", "metric": "SR 前后 PSNR/SSIM（对母版）"},
         {"type": "noisy", "file": f"{args.name}_noisy.mp4",

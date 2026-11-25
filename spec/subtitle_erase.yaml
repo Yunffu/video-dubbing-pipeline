@@ -14,16 +14,48 @@ output:
     - 字幕区域被填充，画面其余区域**不得被改动**（防误伤）
 
 metric:
+  # ---------------------------------------------------------------- 判定口径
+  # 一句话：区外不得误伤是**硬约束**；字幕区 PSNR/SSIM 是**分档的调优项**。
+  # 阈值全部锁在 eval/thresholds.py，runner 只负责判定和留痕（口径唯一）。
+  verdict_rule:
+    FAIL: 硬约束不过（区外 PSNR 相对基线下降 > 0.5dB，或 untouched_out_mask < 60dB）
+    WARN: 硬约束过了，但没达到**本方案档位**的字幕区 PSNR/SSIM（不判失败，记为待调优）
+    PASS: 硬约束过了，且达到本方案档位的字幕区 PSNR/SSIM
+    note: 真实素材无 GT 时字幕区指标不可算 → 只跑硬约束 + 人评，不硬套阈值
+  hard_constraints:            # 所有方案一视同仁，不分档
+    - name: 区外 PSNR 相对基线下降
+      desc: delta(psnr_out_mask) 不得为负太多，说明没有误伤画面其余部分
+      threshold: ">= -0.5 dB"
+    - name: untouched_out_mask
+      desc: 掩膜外像素与输入逐像素一致（inpaint 不该改 mask 外的像素）
+      threshold: ">= 60 dB"
+  tiers:                       # 按方案分档：不同能力的方案不该用同一把尺子
+    A:
+      label: 方案A（OpenCV inpaint，TELEA/NS，纯 CPU）
+      psnr_in_mask: 25.0
+      ssim_in_mask: 0.75
+      rationale: >
+        oracle 上限实测 Telea ≈29.96dB / SSIM 0.50（人脸区），
+        单帧 inpaint 无时序信息，30dB/0.90 物理上达不到 → 不能当硬门槛。
+    B:
+      label: 方案B（视频修复模型 LaMa/ProPainter/STTN）
+      psnr_in_mask: 30.0
+      ssim_in_mask: 0.90
+      rationale: 有跨帧信息 + 生成式补全，理论上限更高 → 门槛可更高。
   primary:
     name: 字幕区 PSNR
     desc: 只在字幕 mask 内计算（母版为 GT 的派生件可用；真实素材无 GT → 走人评 + 时序指标）
-    threshold: 30
-    threshold_source: C-初版值；人眼标定「看不出修补痕迹」后校准
+    threshold: 按 tier 取值（A 25 / B 30）
+    threshold_source: 双档口径，锁定在 eval/thresholds.py
   secondary:
     - name: 区外 PSNR（防误伤）
       desc: 字幕框以外区域的 PSNR，必须不低于基线
-      threshold: 不低于原片（无重编码损失）
+      threshold: delta >= -0.5 dB
       threshold_source: 硬约束
+    - name: 字幕区 SSIM
+      desc: 结构相似度（灰度，11x11 高斯窗 sigma=1.5，Wang et al. 2004）
+      threshold: 按 tier 取值（A 0.75 / B 0.90）
+      threshold_source: 双档口径
     - name: 时序稳定性 TWE / TC
       desc: 相邻帧修补区域的抖动（MFVSR 口径：字幕区/区外分别报）
       threshold: 待填
@@ -31,6 +63,12 @@ metric:
     - name: 人工盲评
       threshold: 人工
       threshold_source: 人工评价（用户打分表）
+  aggregation:
+    main_stat: 中位数
+    black_frames: 母版帧均亮度 < 8 的近黑帧单独计数，不进主指标
+    note: >
+      口径错了结论会反过来：v1 用采样帧均值，同一条 case 随采样数在
+      16–30dB 间漂移（采到近黑帧 → 擦完仍黑 → 恒 99dB 拉高均值）。
 
 degrade_allowed:
   - when: 方案 B（video-subtitle-remover / ProPainter / STTN）依赖或显存不满足
@@ -47,8 +85,11 @@ budget:
   cost_cny: 0
 
 cases:
-  must_pass: [M1_01_hard_sub_bottom, M1_04_hard_sub_bottom, M1_04_hard_sub_face]
-  note: 硬字幕 case 来自「合成 GT 法」的派生件（母版 + 烧录字幕 = 可算 PSNR/SSIM）
+  must_pass: [M1_01__hard_sub_bottom, M1_04__hard_sub_bottom, M1_04__hard_sub_face]
+  note: >
+    硬字幕 case 来自「合成 GT 法」的派生件（母版 + 烧录字幕 = 可算 PSNR/SSIM）。
+    人脸字幕派生件的字幕必须真的压在嘴上 —— 早期版本的 face 派生件字幕烧在画面顶部，
+    等于「拿假 case 测检测器」，已修正并重新生成（scripts/make_derived.py 的 detect_face_anchor）。
 
 schemes:                    # 对比表的两列
   A:
@@ -70,6 +111,19 @@ schemes:                    # 对比表的两列
     status: 观察项，不进对比表（29GB fp8 权重 + 要求 CUDA，8GB 跑不动）
 
 implementation:
-  detection: scripts/detect_hardsub.py（横带边缘密度法，20 带 + 绝对下限 + 相对倍数）
-  erase: 待补（阶段 2）
+  detection:
+    bottom: scripts/detect_hardsub.py（横带边缘密度法，20 带 + 绝对下限 + 相对倍数）
+    face: pipeline/face_sub.py（YuNet 人脸框 → 脸下半部行密度剖面 → 列密度剖面 → 三条否决判据）
+    face_veto:
+      - 横向跨度 >= 1.5×脸宽（嘴/牙齿/下巴只占 ~0.6 倍脸宽）
+      - 文字行必须跨过嘴部（嘴上方的衣物/背景纹理不算）
+      - 文字块高度 >= 0.30×脸高（实测压脸字幕 ≈0.55 倍脸高）
+    face_accuracy: >
+      用「合成 GT 法」造 oracle（母版 + 烧录字幕 → 多帧中位数相减 = 字幕像素精确位置），
+      检测矩形与 oracle 矩形求 IoU，实测 0.92–0.99；母版/底部字幕片为负样本（不误报）。
+    mask: >
+      底部字幕 = 全宽横带 (0, y0, w, y1)；人脸字幕 = 检测矩形 (x0, y0, x1, y1)。
+      两条路径统一成矩形后共用同一套擦除/指标/判定链路（se.region_of）。
+  erase: pipeline/subtitle_erase.py::erase_video（逐帧流式，不缓存整片）
+  eval: eval/runner.py + eval/thresholds.py + eval/metrics.py（不落盘，编码前口径）
   reference: bilibili 官方视频译制管线 video-dub **不含字幕擦除**（画面流 copy 不重编码）→ 这一步是我们自己加的

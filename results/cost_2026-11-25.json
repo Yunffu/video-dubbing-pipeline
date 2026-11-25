@@ -1,0 +1,41 @@
+{
+  "rows": [
+    {
+      "run": "_work\\runs\\BV1zGy5ziEnd_00000.work\\run.json",
+      "segments": 10,
+      "duration_s": 30.16,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "translate_cost_usd": 0,
+      "cost_per_min_audio_usd": 0,
+      "wall_ms": 31020,
+      "provider": "offline",
+      "degraded": true,
+      "attempts": 0,
+      "retried_calls": 0,
+      "tts_chars": 71,
+      "mix": {
+        "segments": 10,
+        "stretched": 10,
+        "overshoot": 10,
+        "max_tempo": 2.064,
+        "min_tempo": 0.213,
+        "mean_abs_stretch": 0.24
+      }
+    }
+  ],
+  "summary": {
+    "runs": 1,
+    "segments": 10,
+    "audio_minutes": 0.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "translate_cost_usd": 0,
+    "cost_per_min_audio_usd": 0.0,
+    "wall_ms": 31020,
+    "degraded_runs": 1,
+    "retried_calls": 0,
+    "degraded_cost_usd": 0,
+    "overshoot_segments": 10
+  }
+}

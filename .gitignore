@@ -17,5 +17,10 @@ assets/raw/*.mp4
 # 中间产物（ASS 字幕等）
 _work/
 
+# 跑分产物的中间视频（每 case 数百 MB 无损 mkv，可由 eval/runner.py 重建）
+# 注意：results/<run_id>/ 下的 metrics.jsonl / table.md / badcases.md / regression.md
+#       是「跑分可复现」的证据链，保留入库
+results/*/work/
+
 # 本地密钥，不入库
 .env

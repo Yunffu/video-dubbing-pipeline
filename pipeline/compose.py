@@ -87,8 +87,15 @@ def build_audio_track(tts_segments: list, out_path: Path,
         "segments": len(infos),
         "stretched": len(stretched),
         "overshoot": sum(1 for i in infos if i["overshoot"]),
-        "max_tempo": max((i["tempo"] for i in infos), default=1.0),
-        "min_tempo": min((i["tempo"] for i in infos), default=1.0),
+        # required_* = 想要达到的变速比（可能超出 [tempo_min, tempo_max]）；
+        # applied_*  = 实际施加的变速比（已被夹在区间内，永远合法）。
+        # 两个都报：required 是「译文长度不匹配」的证据，applied 是「实际做了什么」。
+        # （v1 只报 max_tempo，读起来像违反了 25% 上限，其实那是 required 值。）
+        "max_required_tempo": max((i["tempo"] for i in infos), default=1.0),
+        "min_required_tempo": min((i["tempo"] for i in infos), default=1.0),
+        "max_applied_tempo": max((i["applied_tempo"] for i in infos), default=1.0),
+        "min_applied_tempo": min((i["applied_tempo"] for i in infos), default=1.0),
+        "tempo_bounds": [tempo_min, tempo_max],
         "mean_abs_stretch": round(
             sum(abs(i["applied_tempo"] - 1.0) for i in infos) / max(len(infos), 1), 4),
     }
