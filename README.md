@@ -28,7 +28,8 @@
 - `eval/`         `runner.py`（跑分+回归）、`metrics.py`（指标口径）、`cost.py`（成本账单）、
                   `human_review/`（人评工作台）
 - `spec/`         六环节标准 + `_fault.yaml`（每条阈值注明来源）
-- `tests/`        不联网的自测（`python tests/test_translate.py` / `python tests/test_pricing.py`）
+- `tests/`        不联网的自测（`python tests/test_translate.py` / `python tests/test_pricing.py` /
+                  `python tests/test_review_ui.py`）
 - `assets/`       `manifest.json`（来源+许可+SHA256）、`cases.json`（case 集）、`glossary.json`（术语表）、`SOURCES.md`（登记表）
 - `assets/raw/`   母版（不入库，由脚本重建）/ `assets/derived/` 派生难例（不入库）
 
@@ -76,6 +77,9 @@ python tests/test_translate.py
 # 9) 成本口径自测（不联网）
 python tests/test_pricing.py
 
+# 9b) 人评打分台格式自测（不联网、不起服务）
+python tests/test_review_ui.py
+
 # 10) 成本账单（含反事实对比：本地栈 vs 托管 API）
 python eval/cost.py --scan results/scenarios
 
@@ -84,6 +88,7 @@ python eval/runner.py --case-set all
 
 # 12) 人评工作台：出题 → （人打分）→ 反推阈值
 python eval/human_review/make_items.py --cases all
+python eval/human_review/review_ui.py    # 打分界面：浏览器里看片点分，保存后直接写 reviews.json
 python eval/human_review/build_packet.py build --items results/human_review/items/items.json \
        --out results/human_review/packet.json
 python eval/human_review/build_packet.py summarize --packet results/human_review/packet.json \
