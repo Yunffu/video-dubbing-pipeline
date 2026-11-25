@@ -33,9 +33,9 @@ def main():
     ap.add_argument("--base-url", default=os.environ.get(
         "GATEWAY_BASE_URL", "http://127.0.0.1:8790/v1"))
     ap.add_argument("--api-key", default=os.environ.get("GATEWAY_API_KEY", "mock-token"))
-    ap.add_argument("--model", default=os.environ.get("GATEWAY_MODEL", "deepseek-chat"))
+    ap.add_argument("--model", default=os.environ.get("GATEWAY_MODEL", "deepseek-flash"))
     ap.add_argument("--allowed-models", default=os.environ.get(
-        "GATEWAY_ALLOWED_MODELS", "deepseek-chat,gpt-4o-mini"))
+        "GATEWAY_ALLOWED_MODELS", "deepseek-flash,gpt-4o-mini"))
     ap.add_argument("--burst", type=int, default=1)
     ap.add_argument("--wrong-token", action="store_true")
     ap.add_argument("--audit", default="results/gateway/audit.jsonl")

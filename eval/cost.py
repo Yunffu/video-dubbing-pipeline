@@ -97,7 +97,7 @@ def collect(scan_dir: Path) -> list[dict]:
         retried = max(len(attempts) - 1, 0) if attempts else 0
 
         tokens = _stage_tokens(tr)
-        model = tr.get("model") or meta.get("model") or "deepseek-chat"
+        model = tr.get("model") or meta.get("model") or "deepseek-flash"
         recorded = extra.get("estimated_usd")
         if recorded is None:
             recorded = cost.get("translate_cost_usd")

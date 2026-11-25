@@ -10,13 +10,13 @@
 
 用法:
     # 起网关（前台）
-    python scripts/mock_gateway.py --port 8790 --rpm 5 --allowed-models deepseek-chat,gpt-4o-mini
+    python scripts/mock_gateway.py --port 8790 --rpm 5 --allowed-models deepseek-flash,gpt-4o-mini
 
     # 另一个终端：跑接入层（凭据与地址都走环境变量）
     export GATEWAY_BASE_URL=http://127.0.0.1:8790/v1
     export GATEWAY_API_KEY=mock-token
-    export GATEWAY_ALLOWED_MODELS=deepseek-chat,gpt-4o-mini
-    python scripts/gateway_demo.py --model deepseek-chat
+    export GATEWAY_ALLOWED_MODELS=deepseek-flash,gpt-4o-mini
+    python scripts/gateway_demo.py --model deepseek-flash
 
     # 想看失败路径：
     python scripts/gateway_demo.py --model not-approved-model   # 白名单拒绝
@@ -31,7 +31,7 @@ from urllib.parse import urlparse
 
 STATE = {
     "rpm": 5,
-    "allowed": {"deepseek-chat", "gpt-4o-mini"},
+    "allowed": {"deepseek-flash", "gpt-4o-mini"},
     "token": "mock-token",
     "calls": [],          # 时间戳列表，用于限流
     "upstream_calls": 0,
@@ -128,7 +128,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8790)
     ap.add_argument("--rpm", type=int, default=5)
-    ap.add_argument("--allowed-models", default="deepseek-chat,gpt-4o-mini")
+    ap.add_argument("--allowed-models", default="deepseek-flash,gpt-4o-mini")
     ap.add_argument("--token", default="mock-token")
     args = ap.parse_args()
 

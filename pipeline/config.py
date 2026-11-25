@@ -4,7 +4,8 @@
     TRANSLATE_PROVIDER        deepseek | openai_compatible | offline | auto（默认 auto）
     DEEPSEEK_API_KEY          DeepSeek 密钥
     DEEPSEEK_BASE_URL         默认 https://api.deepseek.com/v1
-    DEEPSEEK_MODEL            默认 deepseek-chat
+    DEEPSEEK_MODEL            默认 deepseek-flash（官方定价页当前只列 flash / v4-pro；
+                             旧名 deepseek-chat 实测仍可用，由 V4.1-Flash 承载、按 flash 价计费）
     OPENAI_API_KEY            任意 OpenAI 兼容端点的密钥
     OPENAI_BASE_URL           任意 OpenAI 兼容端点，形如 https://host/v1
     OPENAI_MODEL              端点上的模型名
@@ -85,7 +86,7 @@ class TranslateConfig:
     deepseek_api_key: str = field(default_factory=lambda: _env("DEEPSEEK_API_KEY"))
     deepseek_base_url: str = field(
         default_factory=lambda: _env("DEEPSEEK_BASE_URL", "https://api.deepseek.com/v1"))
-    deepseek_model: str = field(default_factory=lambda: _env("DEEPSEEK_MODEL", "deepseek-chat"))
+    deepseek_model: str = field(default_factory=lambda: _env("DEEPSEEK_MODEL", "deepseek-flash"))
     openai_api_key: str = field(default_factory=lambda: _env("OPENAI_API_KEY"))
     openai_base_url: str = field(default_factory=lambda: _env("OPENAI_BASE_URL"))
     openai_model: str = field(default_factory=lambda: _env("OPENAI_MODEL"))

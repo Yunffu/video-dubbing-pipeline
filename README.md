@@ -106,7 +106,7 @@ python scripts/fault_test.py --json results/fault.json   # 7 条用例全跑
 
 | 后端 | 配置 | 说明 |
 |---|---|---|
-| `deepseek` | `DEEPSEEK_API_KEY` | 默认 `https://api.deepseek.com/v1` + `deepseek-chat`（官方定价页当前只列 `deepseek-flash` / `deepseek-v4-pro`；旧名实测仍可调用，成本按 flash 价折算，见 `pipeline/pricing.py`） |
+| `deepseek` | `DEEPSEEK_API_KEY` | 默认 `https://api.deepseek.com/v1` + `deepseek-flash`（官方定价页当前只列 `deepseek-flash` / `deepseek-v4-pro`；旧名 `deepseek-chat` 实测仍可调用、由 V4.1-Flash 承载，成本按 flash 价折算，见 `pipeline/pricing.py`） |
 | `openai_compatible` | `OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL` | Kimi、通义、GLM、vLLM、Ollama 共用同一套实现 |
 | `offline` | 无 | Argos-Translate → 术语表替换 → 原文透传（三级降级） |
 | `auto`（默认） | — | DeepSeek → 自定义端点 → 离线，**任一失败自动降级下一级并留痕** |
