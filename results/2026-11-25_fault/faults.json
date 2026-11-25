@@ -3,27 +3,27 @@
     {
       "case": "translate/dns_fail",
       "pass": true,
-      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1509ms"
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1501ms"
     },
     {
       "case": "translate/http_401",
       "pass": true,
-      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1508ms"
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1501ms"
     },
     {
       "case": "translate/http_429",
       "pass": true,
-      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1529ms"
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1501ms"
     },
     {
       "case": "translate/http_5xx",
       "pass": true,
-      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1524ms"
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1501ms"
     },
     {
       "case": "translate/network_gone",
       "pass": true,
-      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1540ms"
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1523ms"
     },
     {
       "case": "tts/network_gone",
