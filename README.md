@@ -80,7 +80,7 @@ python tests/test_pricing.py
 python eval/cost.py --scan results/scenarios
 
 # 11) 字幕擦除跑分（8 条 case，出 metrics.jsonl + table.md + badcases.md）
-python eval/runner.py --case-set all --plan baseline
+python eval/runner.py --case-set all
 
 # 12) 人评工作台：出题 → （人打分）→ 反推阈值
 python eval/human_review/make_items.py --cases all
@@ -90,7 +90,7 @@ python eval/human_review/build_packet.py summarize --packet results/human_review
        --reviews results/human_review/reviews.json --out results/human_review/thresholds.json
 
 # 13) 抗压：故障注入（断网 / 401 / 429 / 5xx / 媒体损坏）
-python scripts/fault_test.py --case fault_01 --inject dns_fail,timeout,429
+python scripts/fault_test.py --json results/fault.json   # 7 条用例全跑
 ```
 
 > FFmpeg 需在 PATH 中（本机路径：`D:\tools\ffmpeg\ffmpeg-9.1-essentials_build\bin`）。
