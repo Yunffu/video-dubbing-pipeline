@@ -150,10 +150,12 @@ def main():
 
     print(f"\n{passed}/{len(cases)} 通过")
     if args.json:
-        Path(args.json).write_text(json.dumps(
+        p = Path(args.json)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(json.dumps(
             {"cases": rows, "passed": passed, "total": len(cases)},
             ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"-> {args.json}")
+        print(f"-> {p}")
     sys.exit(0 if passed == len(cases) else 1)
 
 

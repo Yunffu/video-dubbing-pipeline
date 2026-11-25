@@ -40,10 +40,27 @@ if hasattr(sys.stdout, "reconfigure"):
 
 
 def text_pixel_mask(derived: np.ndarray, master: np.ndarray) -> np.ndarray:
-    """oracle：字幕字形的真实像素（GT 差分 + 轻微膨胀吃掉抗锯齿边）。"""
+    """oracle：字幕字形的真实像素（GT 差分 + 轻微膨胀吃掉抗锯齿边）。
+
+    **必须滤掉重编码噪点**：派生件是 libx264 重编码的，母版与派生件在**全画面**
+    都有微小差异（码率分配导致的像素级抖动）。直接 diff > 30 会把这些噪点一起
+    算成「字幕像素」→ mask 覆盖率虚高、分布到全画面，连带污染窗口定位。
+    做法：连通域面积过滤，只留够大的块（字形笔画），丢掉孤立噪点。
+    """
     diff = np.abs(derived.astype(np.int16) - master.astype(np.int16)).sum(axis=2)
     m = (diff > 30).astype(np.uint8) * 255
-    return cv2.dilate(m, np.ones((3, 3), np.uint8), iterations=1)
+    m = cv2.dilate(m, np.ones((3, 3), np.uint8), iterations=1)
+    # 连通域面积过滤：字形笔画连成的块面积远大于噪点
+    n, lab, stats, _ = cv2.connectedComponentsWithStats(m, connectivity=8)
+    keep = np.zeros_like(m)
+    for i in range(1, n):
+        area = stats[i, cv2.CC_STAT_AREA]
+        w = stats[i, cv2.CC_STAT_WIDTH]
+        h = stats[i, cv2.CC_STAT_HEIGHT]
+        # 字幕笔画：宽或高 ≥4px，且面积 ≥12px（孤立噪点两者都不满足）
+        if area >= 12 and (w >= 4 or h >= 4):
+            keep[lab == i] = 255
+    return keep
 
 
 def run_cell(engine: str, derived: np.ndarray, master: np.ndarray,

@@ -1,0 +1,41 @@
+{
+  "cases": [
+    {
+      "case": "translate/dns_fail",
+      "pass": true,
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1509ms"
+    },
+    {
+      "case": "translate/http_401",
+      "pass": true,
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1508ms"
+    },
+    {
+      "case": "translate/http_429",
+      "pass": true,
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1529ms"
+    },
+    {
+      "case": "translate/http_5xx",
+      "pass": true,
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1524ms"
+    },
+    {
+      "case": "translate/network_gone",
+      "pass": true,
+      "detail": "最终后端=offline degraded=True 段数=3/3 失败尝试=1 耗时=1540ms"
+    },
+    {
+      "case": "tts/network_gone",
+      "pass": true,
+      "detail": "degraded=True 段数=0 原因=所有 TTS 后端均失败，保留原声"
+    },
+    {
+      "case": "media/corrupt",
+      "pass": true,
+      "detail": "source=ffmpeg_stderr error=容器损坏或无有效流"
+    }
+  ],
+  "passed": 7,
+  "total": 7
+}
