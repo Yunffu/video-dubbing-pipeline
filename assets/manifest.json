@@ -5,7 +5,7 @@
     {
       "id": "M1_01",
       "case_role": "multi",
-      "desc": "户外多人对话 1920×1080 —— 多人字幕重叠难例母版（人脸校验：多人帧占比 62%，不适合单人 LipSync GT）",
+      "desc": "户外多人对话 1920×1080 —— 多人字幕重叠难例母版（人脸校验 --frames 24：单人正脸 8%、多人帧 67%，不适合单人 LipSync GT）",
       "source": {
         "url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/-3_O_Levezinho_encontra_o_amigo.webm",
         "sha256": "36e8febc8671fd8e0c596bd9720f132895ebc012e4b41af8089bb115cc1114a2",
@@ -18,13 +18,16 @@
         "author": "Canal Madeira",
         "credit": "File:-3 O Levezinho encontra o amigo.webm, via Wikimedia Commons"
       },
-      "clip": { "start": 0, "dur": 25 },
+      "clip": {
+        "start": 0,
+        "dur": 25
+      },
       "selection": "scan_segment.py 按音量挑有声段；check_face.py 判定为多人"
     },
     {
       "id": "M1_02",
       "case_role": "profile",
-      "desc": "竖屏采访 1080×1920 —— 侧脸难例母版（yaw 由 -73° 渐变到 -9°，正脸帧仅 19%，是 LipSync 主要失败区）",
+      "desc": "竖屏采访 1080×1920 —— 侧脸难例母版（人脸校验 --frames 24：单人正脸 29%、多人帧 0%、脸高 126px；yaw 由 -73° 渐变到 -9°，是 LipSync 主要失败区）",
       "source": {
         "url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Marina_Smirnova_%C4%89i%C4%89eronas_en_la_muzeo_de_Grigorij_Rasputin.webm",
         "sha256": "07cbd02264fcd70433a4c2b687364657680fc61007d243a93885dfcf7cd5088a",
@@ -37,13 +40,16 @@
         "author": "RG72",
         "credit": "File:Marina Smirnova ĉiĉeronas en la muzeo de Grigorij Rasputin.webm, via Wikimedia Commons"
       },
-      "clip": { "start": 20, "dur": 25 },
+      "clip": {
+        "start": 20,
+        "dur": 25
+      },
       "selection": "原片整体音量 -37dB（需增益）；check_face.py 判定为侧脸主导"
     },
     {
       "id": "M1_04",
       "case_role": "gt",
-      "desc": "NASA 宇航员单人访谈 1280×720 英文 —— 高清单人正脸母版（人脸校验：单人正脸 88%、多人帧 0%、脸高 85px）",
+      "desc": "NASA 宇航员单人访谈 1280×720 英文 —— 高清单人正脸母版（人脸校验 --frames 24：单人正脸 96%、多人帧 0%、脸高 88px）",
       "source": {
         "url": "https://upload.wikimedia.org/wikipedia/commons/4/4c/NASA_Astronaut_Mark_Vande_Hei_on_setting_the_record_for_longest_single_spaceflight_for_an_American.webm",
         "sha256": "ac8b88297fe89ae5dff3cabb958aeeedb2c77858ccd615e4563947d984ebec0d",
@@ -56,13 +62,16 @@
         "author": "NASA Johnson",
         "credit": "NASA Astronaut Mark Vande Hei on setting the record for longest single spaceflight for an American"
       },
-      "clip": { "start": 15, "dur": 25 },
-      "selection": "select_segment.py 滑窗：start=15/20/25 窗口单人正脸 88%、多人帧 0%"
+      "clip": {
+        "start": 15,
+        "dur": 25
+      },
+      "selection": "select_segment.py 滑窗挑窗口（start=15/20/25 三个窗口均单人正脸 88%、多人帧 0%）；最终切片 start=15 dur=25，按 check_face.py --frames 24 复核为单人正脸 96%"
     },
     {
       "id": "M3_01",
       "case_role": "lowres",
-      "desc": "1982 年 NSA 演讲录像 654×480 —— 单人正脸 + 低清老片母版（人脸校验：单人正脸 88%、脸高 102px）",
+      "desc": "1982 年 NSA 演讲录像 654×480 —— 单人正脸 + 低清老片母版（人脸校验 --frames 24：单人正脸 92%、多人帧 0%、脸高 105px）",
       "source": {
         "url": "https://upload.wikimedia.org/wikipedia/commons/7/74/Grace_Hopper_-_Future_Possibilities_-_Data%2C_Hardware%2C_Software%2C_and_People.webm",
         "sha256": "ad88ff3623dbf56103f6549a19d73f7fd73cd26b7cf4bccc987344863e2ee1d2",
@@ -75,8 +84,12 @@
         "author": "Rear Admiral Grace Hopper / NSA",
         "credit": "Capt. Grace Hopper on Future Possibilities: Data, Hardware, Software, and People (1982)"
       },
-      "clip": { "start": 1740, "dur": 25 },
-      "selection": "scan_segment.py 自动挑最响窗口（mean -23.9 dB）；check_face.py 单人正脸 88%"
+      "clip": {
+        "start": 1740,
+        "dur": 25
+      },
+      "selection": "scan_segment.py 自动挑最响窗口（mean -23.9 dB）；按 check_face.py --frames 24 复核为单人正脸 92%"
     }
-  ]
+  ],
+  "_face_metric_note": "desc 中的人脸数字来自 scripts/check_face.py --frames 24 均匀采样，与 docs/notes/02-素材审计表.md 一致，可自行复跑核对。"
 }

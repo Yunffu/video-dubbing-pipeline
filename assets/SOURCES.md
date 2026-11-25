@@ -4,15 +4,17 @@
 > 重建命令：`python scripts/fetch_assets.py` → 母版落 `assets/raw/`
 > 派生难例：`python scripts/build_cases.py` → 落 `assets/derived/`，case 清单 `assets/cases.json`
 > 审计表：`docs/notes/02-素材审计表.md`（规格自检 + 人脸校验，由 `scripts/audit_assets.py` 生成）
+> 表中人脸数字的**唯一口径**：`python scripts/check_face.py assets/raw/<ID>.mp4`（默认 `--frames 24` 均匀采样），
+> 与审计表、`manifest.json` 的 `desc` **完全一致**，可逐条复跑核对。
 
 ## 母版（GT 基准）
 
 | ID | 定位 | 内容 | 许可 | 作者 / 署名 | 可否再分发 | 切片 | 人脸校验 |
 |---|---|---|---|---|---|---|---|
-| M1_04 | **GT** | NASA 宇航员单人访谈 1280×720 英文 | Public domain (NASA) | NASA Johnson | ✅ | 15–40s | 单人正脸 94%，脸高 88px → **PASS** |
-| M3_01 | **GT / 低清** | 1982 年 NSA 演讲录像 654×480 英文 | Public domain（美国政府作品 / NSA） | Rear Admiral Grace Hopper / NSA | ✅ | 1740–1765s | 单人正脸 88%，脸高 102px → **PASS** |
-| M1_02 | 侧脸难例 | 竖屏采访 1080×1920 | CC BY-SA 4.0 | RG72 | ✅（派生需同协议） | 20–45s | yaw −73°→−9°，正脸帧仅 19% |
-| M1_01 | 多人难例 | 户外多人对话 1920×1080 | CC BY 3.0 | Canal Madeira | ✅（需署名） | 0–25s | 多人帧占比 62% |
+| M1_04 | **GT** | NASA 宇航员单人访谈 1280×720 英文 | Public domain (NASA) | NASA Johnson | ✅ | 15–40s | 单人正脸 96%，多人帧 0%，脸高 88px → **PASS** |
+| M3_01 | **GT / 低清** | 1982 年 NSA 演讲录像 654×480 英文 | Public domain（美国政府作品 / NSA） | Rear Admiral Grace Hopper / NSA | ✅ | 1740–1765s | 单人正脸 92%，多人帧 0%，脸高 105px → **PASS** |
+| M1_02 | 侧脸难例 | 竖屏采访 1080×1920 | CC BY-SA 4.0 | RG72 | ✅（派生需同协议） | 20–45s | yaw −73°→−9°，单人正脸仅 29%，多人帧 0%，脸高 126px |
+| M1_01 | 多人难例 | 户外多人对话 1920×1080 | CC BY 3.0 | Canal Madeira | ✅（需署名） | 0–25s | 多人帧占比 67%，单人正脸仅 8%，脸高 210px |
 
 > **为什么按"定位"而不是"素材类型"编号**：素材先按「能否当 LipSync 基准」筛一遍，筛不上的不扔，转成难例母版。
 > M1_02 侧脸、M1_01 多人，正是难例矩阵里最硬的两类（侧脸是 LipSync 主要失败区；多人字幕重叠是擦除的边界）。

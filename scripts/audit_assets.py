@@ -42,9 +42,12 @@ def main():
             if len(cells) == 4 and cells[0] != "文件":
                 spec.setdefault(cells[1], (cells[2], cells[3]))
 
-        f = run([sys.executable, str(ROOT / "scripts" / "check_face.py"), str(mp4), "--frames", "16"])
+        f = run([sys.executable, str(ROOT / "scripts" / "check_face.py"), str(mp4), "--frames", "24"])
         face = {}
         for line in f.stdout.splitlines():
+            m = re.search(r"多人帧占比:\s*(\d+)%", line)
+            if m:
+                face["multi_pct"] = m.group(1) + "%"
             m = re.search(r"单人正脸帧占比\([^)]*\):\s*([\d.]+)%.*最大脸高:\s*(\d+)px", line)
             if m:
                 face["frontal_pct"] = f"{float(m.group(1)):.0f}%"
@@ -54,20 +57,22 @@ def main():
 
         rows.append({"meta": meta, "spec": spec, "face": face})
 
-    md = ["| ID | 定位 | 许可 | 分辨率 | 帧率 | 时长 | 单人正脸 | 最大脸高 | 判定 |",
-          "|---|---|---|---|---|---|---|---|---|"]
+    md = ["| ID | 定位 | 许可 | 分辨率 | 帧率 | 时长 | 单人正脸 | 多人帧 | 最大脸高 | 判定 |",
+          "|---|---|---|---|---|---|---|---|---|---|"]
     for r in rows:
         m = r["meta"]
         g = lambda k: r["spec"].get(k, ("-", "-"))[0]
         md.append(f"| {m['id']} | {m.get('case_role', '-')} | {m['license']['name']} | "
                   f"{g('分辨率')} | {g('帧率')} | {g('时长')} | "
                   f"{r['face'].get('frontal_pct', '-')} | "
+                  f"{r['face'].get('multi_pct', '-')} | "
                   f"{r['face'].get('face_h', '-')} | {r['face'].get('verdict', '-')} |")
 
     out = "\n".join(md) + (
         "\n\n> 判定规则：单人正脸帧占比 ≥80% 且最大脸高 ≥80px → PASS（可做 LipSync GT；阈值依据：LipSync 裁脸后统一 resize 到 96×96，源脸高 ≥80px 即够）。\n"
+        "> 定位规则：`gt` = 单人正脸且无多人帧；`multi` = 多人帧占比高；`profile` = 单人但偏航角大（正脸帧少）；`lowres` = 分辨率 ≤480p。\n"
         "> 规格自检来自 `probe_media.py`；人脸校验来自 `check_face.py`（OpenCV YuNet，"
-        "由鼻尖与眼中点相对位置估算偏航角）。\n")
+        "由鼻尖与眼中点相对位置估算偏航角）；两者均按 `--frames 24` 均匀采样，可自行复跑核对。\n")
     Path(args.md).write_text("# 素材审计表\n\n> 由 `scripts/audit_assets.py` 生成\n\n" + out, encoding="utf-8")
     print(out)
     print(f"→ {args.md}")
