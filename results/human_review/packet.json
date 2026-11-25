@@ -1,0 +1,200 @@
+{
+  "note": "把每个条目看成片，然后填 review.json 里的同名字段。打分标准见 dimensions[].hint；留空表示这条没评。",
+  "dimensions": [
+    {
+      "key": "erase",
+      "label": "字幕擦除痕迹是否明显",
+      "hint": "5=完全看不出擦过；1=一眼假"
+    },
+    {
+      "key": "break",
+      "label": "断句是否自然",
+      "hint": "5=像人说话；1=断得很碎/连在一起"
+    },
+    {
+      "key": "lip",
+      "label": "口型是否假",
+      "hint": "5=看不出；1=明显不同步（本项目可能不做口型）"
+    },
+    {
+      "key": "style",
+      "label": "翻译腔是否可接受",
+      "hint": "5=地道；1=生硬直译"
+    },
+    {
+      "key": "sub",
+      "label": "字幕是否遮挡画面",
+      "hint": "5=不挡；1=挡住关键信息"
+    }
+  ],
+  "items": [
+    {
+      "id": "M1_01__hard_sub_bottom",
+      "title": "M1_01__hard_sub_bottom（hard_sub_bottom）",
+      "difficulty_type": "hard_sub_bottom",
+      "video": "results\\human_review\\items\\M1_01__hard_sub_bottom.mp4",
+      "master": "assets/raw/M1_01.mp4",
+      "metrics": {
+        "psnr_in_mask": 16.84,
+        "psnr_in_mask_p25": 15.245,
+        "psnr_in_mask_p75": 17.53,
+        "ssim_in_mask": 0.765,
+        "psnr_baseline": 10.38,
+        "psnr_delta": 6.46,
+        "untouched_out_mask": 99.0
+      },
+      "cost": {
+        "usd": 0.0,
+        "note": "本条为字幕擦除环节，无模型调用；译制环节成本见 eval/cost.py"
+      },
+      "auto_note": "指标仅供参考，判定权在人（overall 字段由人填）"
+    },
+    {
+      "id": "M1_01__hard_sub_face",
+      "title": "M1_01__hard_sub_face（hard_sub_face）",
+      "difficulty_type": "hard_sub_face",
+      "video": "results\\human_review\\items\\M1_01__hard_sub_face.mp4",
+      "master": "assets/raw/M1_01.mp4",
+      "metrics": {
+        "psnr_in_mask": 16.84,
+        "psnr_in_mask_p25": 15.14,
+        "psnr_in_mask_p75": 20.695,
+        "ssim_in_mask": 0.621,
+        "psnr_baseline": 7.95,
+        "psnr_delta": 8.89,
+        "untouched_out_mask": 99.0
+      },
+      "cost": {
+        "usd": 0.0,
+        "note": "本条为字幕擦除环节，无模型调用；译制环节成本见 eval/cost.py"
+      },
+      "auto_note": "指标仅供参考，判定权在人（overall 字段由人填）"
+    },
+    {
+      "id": "M1_02__hard_sub_bottom",
+      "title": "M1_02__hard_sub_bottom（hard_sub_bottom）",
+      "difficulty_type": "hard_sub_bottom",
+      "video": "results\\human_review\\items\\M1_02__hard_sub_bottom.mp4",
+      "master": "assets/raw/M1_02.mp4",
+      "metrics": {
+        "psnr_in_mask": 21.89,
+        "psnr_in_mask_p25": 21.763,
+        "psnr_in_mask_p75": 22.045,
+        "ssim_in_mask": 0.773,
+        "psnr_baseline": 7.24,
+        "psnr_delta": 14.65,
+        "untouched_out_mask": 99.0
+      },
+      "cost": {
+        "usd": 0.0,
+        "note": "本条为字幕擦除环节，无模型调用；译制环节成本见 eval/cost.py"
+      },
+      "auto_note": "指标仅供参考，判定权在人（overall 字段由人填）"
+    },
+    {
+      "id": "M1_02__hard_sub_face",
+      "title": "M1_02__hard_sub_face（hard_sub_face）",
+      "difficulty_type": "hard_sub_face",
+      "video": "results\\human_review\\items\\M1_02__hard_sub_face.mp4",
+      "master": "assets/raw/M1_02.mp4",
+      "metrics": {
+        "psnr_in_mask": 21.705,
+        "psnr_in_mask_p25": 20.383,
+        "psnr_in_mask_p75": 22.322,
+        "ssim_in_mask": 0.672,
+        "psnr_baseline": 7.455,
+        "psnr_delta": 14.25,
+        "untouched_out_mask": 99.0
+      },
+      "cost": {
+        "usd": 0.0,
+        "note": "本条为字幕擦除环节，无模型调用；译制环节成本见 eval/cost.py"
+      },
+      "auto_note": "指标仅供参考，判定权在人（overall 字段由人填）"
+    },
+    {
+      "id": "M1_04__hard_sub_bottom",
+      "title": "M1_04__hard_sub_bottom（hard_sub_bottom）",
+      "difficulty_type": "hard_sub_bottom",
+      "video": "results\\human_review\\items\\M1_04__hard_sub_bottom.mp4",
+      "master": "assets/raw/M1_04.mp4",
+      "metrics": {
+        "psnr_in_mask": 16.105,
+        "psnr_in_mask_p25": 16.052,
+        "psnr_in_mask_p75": 16.12,
+        "ssim_in_mask": 0.402,
+        "psnr_baseline": 10.66,
+        "psnr_delta": 5.445,
+        "untouched_out_mask": 99.0
+      },
+      "cost": {
+        "usd": 0.0,
+        "note": "本条为字幕擦除环节，无模型调用；译制环节成本见 eval/cost.py"
+      },
+      "auto_note": "指标仅供参考，判定权在人（overall 字段由人填）"
+    },
+    {
+      "id": "M1_04__hard_sub_face",
+      "title": "M1_04__hard_sub_face（hard_sub_face）",
+      "difficulty_type": "hard_sub_face",
+      "video": "results\\human_review\\items\\M1_04__hard_sub_face.mp4",
+      "master": "assets/raw/M1_04.mp4",
+      "metrics": {
+        "psnr_in_mask": 17.19,
+        "psnr_in_mask_p25": 16.955,
+        "psnr_in_mask_p75": 17.37,
+        "ssim_in_mask": 0.456,
+        "psnr_baseline": 8.14,
+        "psnr_delta": 9.05,
+        "untouched_out_mask": 99.0
+      },
+      "cost": {
+        "usd": 0.0,
+        "note": "本条为字幕擦除环节，无模型调用；译制环节成本见 eval/cost.py"
+      },
+      "auto_note": "指标仅供参考，判定权在人（overall 字段由人填）"
+    },
+    {
+      "id": "M3_01__hard_sub_bottom",
+      "title": "M3_01__hard_sub_bottom（hard_sub_bottom）",
+      "difficulty_type": "hard_sub_bottom",
+      "video": "results\\human_review\\items\\M3_01__hard_sub_bottom.mp4",
+      "master": "assets/raw/M3_01.mp4",
+      "metrics": {
+        "psnr_in_mask": 18.985,
+        "psnr_in_mask_p25": 18.727,
+        "psnr_in_mask_p75": 19.36,
+        "ssim_in_mask": 0.819,
+        "psnr_baseline": 8.755,
+        "psnr_delta": 10.23,
+        "untouched_out_mask": 99.0
+      },
+      "cost": {
+        "usd": 0.0,
+        "note": "本条为字幕擦除环节，无模型调用；译制环节成本见 eval/cost.py"
+      },
+      "auto_note": "指标仅供参考，判定权在人（overall 字段由人填）"
+    },
+    {
+      "id": "M3_01__hard_sub_face",
+      "title": "M3_01__hard_sub_face（hard_sub_face）",
+      "difficulty_type": "hard_sub_face",
+      "video": "results\\human_review\\items\\M3_01__hard_sub_face.mp4",
+      "master": "assets/raw/M3_01.mp4",
+      "metrics": {
+        "psnr_in_mask": 23.115,
+        "psnr_in_mask_p25": 22.6,
+        "psnr_in_mask_p75": 23.625,
+        "ssim_in_mask": 0.81,
+        "psnr_baseline": 7.745,
+        "psnr_delta": 15.37,
+        "untouched_out_mask": 99.0
+      },
+      "cost": {
+        "usd": 0.0,
+        "note": "本条为字幕擦除环节，无模型调用；译制环节成本见 eval/cost.py"
+      },
+      "auto_note": "指标仅供参考，判定权在人（overall 字段由人填）"
+    }
+  ]
+}

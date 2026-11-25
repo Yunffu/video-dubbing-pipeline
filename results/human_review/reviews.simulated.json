@@ -1,0 +1,82 @@
+{
+  "M1_01__hard_sub_bottom": {
+    "erase": 4,
+    "break": 4,
+    "lip": null,
+    "style": 4,
+    "sub": 4,
+    "overall": 4,
+    "note": "SIMULATED（演示用，非人工判断）",
+    "_simulated": true
+  },
+  "M1_01__hard_sub_face": {
+    "erase": 3,
+    "break": 3,
+    "lip": null,
+    "style": 3,
+    "sub": 3,
+    "overall": 3,
+    "note": "SIMULATED（演示用，非人工判断）",
+    "_simulated": true
+  },
+  "M1_02__hard_sub_bottom": {
+    "erase": 4,
+    "break": 4,
+    "lip": null,
+    "style": 4,
+    "sub": 4,
+    "overall": 4,
+    "note": "SIMULATED（演示用，非人工判断）",
+    "_simulated": true
+  },
+  "M1_02__hard_sub_face": {
+    "erase": 4,
+    "break": 4,
+    "lip": null,
+    "style": 4,
+    "sub": 4,
+    "overall": 4,
+    "note": "SIMULATED（演示用，非人工判断）",
+    "_simulated": true
+  },
+  "M1_04__hard_sub_bottom": {
+    "erase": 2,
+    "break": 2,
+    "lip": null,
+    "style": 2,
+    "sub": 2,
+    "overall": 2,
+    "note": "SIMULATED（演示用，非人工判断）",
+    "_simulated": true
+  },
+  "M1_04__hard_sub_face": {
+    "erase": 3,
+    "break": 3,
+    "lip": null,
+    "style": 3,
+    "sub": 3,
+    "overall": 3,
+    "note": "SIMULATED（演示用，非人工判断）",
+    "_simulated": true
+  },
+  "M3_01__hard_sub_bottom": {
+    "erase": 4,
+    "break": 4,
+    "lip": null,
+    "style": 4,
+    "sub": 4,
+    "overall": 4,
+    "note": "SIMULATED（演示用，非人工判断）",
+    "_simulated": true
+  },
+  "M3_01__hard_sub_face": {
+    "erase": 4,
+    "break": 4,
+    "lip": null,
+    "style": 4,
+    "sub": 4,
+    "overall": 4,
+    "note": "SIMULATED（演示用，非人工判断）",
+    "_simulated": true
+  }
+}

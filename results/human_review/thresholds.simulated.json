@@ -1,0 +1,45 @@
+{
+  "reviewed": 8,
+  "unreviewed": [],
+  "bad_samples": [
+    "M1_04__hard_sub_bottom"
+  ],
+  "good_samples": [
+    "M1_01__hard_sub_bottom",
+    "M1_02__hard_sub_bottom",
+    "M1_02__hard_sub_face",
+    "M3_01__hard_sub_bottom",
+    "M3_01__hard_sub_face"
+  ],
+  "metric_thresholds": {
+    "psnr_in_mask": {
+      "bad_max": 16.105,
+      "good_min": 23.115,
+      "candidate": 16.84,
+      "separable": false
+    },
+    "psnr_in_mask_p25": {
+      "bad_max": 16.052,
+      "good_min": 22.6,
+      "candidate": 15.245,
+      "separable": false
+    },
+    "psnr_in_mask_p75": {
+      "bad_max": 16.12,
+      "good_min": 23.625,
+      "candidate": 17.53,
+      "separable": false
+    },
+    "ssim_in_mask": {
+      "bad_max": 0.402,
+      "good_min": 0.672,
+      "candidate": 0.402,
+      "separable": true
+    }
+  },
+  "cost": {
+    "good_usd": 0.0,
+    "bad_usd": 0.0,
+    "all_usd": 0.0
+  }
+}
