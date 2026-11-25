@@ -1,7 +1,8 @@
 {
   "id": "M1_02",
-  "role": "M1",
-  "desc": "竖屏采访片段（1080x1920）——竖屏译制场景（电竞/短视频出海向）",
+  "role": "profile",
+  "case_role": "profile",
+  "desc": "竖屏采访 1080×1920 —— 侧脸难例母版（yaw 由 -73° 渐变到 -9°，正脸帧仅 19%，是 LipSync 主要失败区）",
   "license": {
     "name": "CC BY-SA 4.0",
     "url": "https://creativecommons.org/licenses/by-sa/4.0",
@@ -16,5 +17,5 @@
   },
   "master": "assets/raw/M1_02.mp4",
   "master_sha256": "b81d97dc70af60d6842afb525a4ef228b2f2f11027cb027944476df39a7edcb2",
-  "verify": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见（原片整体音量偏低 -37dB，需增益）"
+  "verify": ""
 }

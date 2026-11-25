@@ -85,7 +85,7 @@ def main():
         out = raw_dir / f"{a['id']}.mp4"
         normalize(src, out, a["clip"]["start"], a["clip"]["dur"])
         meta = {
-            "id": a["id"], "role": a["role"], "desc": a["desc"],
+            "id": a["id"], "role": a.get("role", a.get("case_role", "")), "case_role": a.get("case_role", ""), "desc": a["desc"],
             "license": a["license"], "source_url": a["source"]["url"],
             "source_sha256": digest, "clip": a["clip"],
             "master": str(out.relative_to(ROOT)).replace("\\", "/"),

@@ -1,0 +1,21 @@
+{
+  "id": "M1_04",
+  "role": "gt",
+  "case_role": "gt",
+  "desc": "NASA 宇航员单人访谈 1280×720 英文 —— 高清单人正脸母版（人脸校验：单人正脸 88%、多人帧 0%、脸高 85px）",
+  "license": {
+    "name": "Public domain (NASA)",
+    "url": "https://commons.wikimedia.org/wiki/File:NASA_Astronaut_Mark_Vande_Hei_on_setting_the_record_for_longest_single_spaceflight_for_an_American.webm",
+    "author": "NASA Johnson",
+    "credit": "NASA Astronaut Mark Vande Hei on setting the record for longest single spaceflight for an American"
+  },
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4c/NASA_Astronaut_Mark_Vande_Hei_on_setting_the_record_for_longest_single_spaceflight_for_an_American.webm",
+  "source_sha256": "ac8b88297fe89ae5dff3cabb958aeeedb2c77858ccd615e4563947d984ebec0d",
+  "clip": {
+    "start": 15,
+    "dur": 25
+  },
+  "master": "assets/raw/M1_04.mp4",
+  "master_sha256": "283c0c36cd6d0a7ad897176c6e2e07c2b4b7592fae158ff379210c373451c336",
+  "verify": ""
+}

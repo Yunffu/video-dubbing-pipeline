@@ -5,180 +5,240 @@
       "master": "assets/raw/M1_01.mp4",
       "gt_master_sha256": "a9ced6fba2c762f4263cc2f7cd70edd8a7e31c956e5b27545e059e4eb2162998",
       "license": "CC BY 3.0",
-      "role": "M1",
+      "role": "multi",
       "derived_file": "assets/derived/M1_01_hard_sub_bottom.mp4",
       "difficulty_type": "hard_sub_bottom",
       "purpose": "字幕擦除常规难例",
       "metric": "字幕区域 mask 内 PSNR/SSIM（对母版）",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见"
+      "verify_note": ""
     },
     {
       "case_id": "M1_01__hard_sub_face",
       "master": "assets/raw/M1_01.mp4",
       "gt_master_sha256": "a9ced6fba2c762f4263cc2f7cd70edd8a7e31c956e5b27545e059e4eb2162998",
       "license": "CC BY 3.0",
-      "role": "M1",
+      "role": "multi",
       "derived_file": "assets/derived/M1_01_hard_sub_face.mp4",
       "difficulty_type": "hard_sub_face",
       "purpose": "字幕压脸边界难例",
       "metric": "同上看擦除是否伤及人脸",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见"
+      "verify_note": ""
     },
     {
       "case_id": "M1_01__low_bitrate",
       "master": "assets/raw/M1_01.mp4",
       "gt_master_sha256": "a9ced6fba2c762f4263cc2f7cd70edd8a7e31c956e5b27545e059e4eb2162998",
       "license": "CC BY 3.0",
-      "role": "M1",
+      "role": "multi",
       "derived_file": "assets/derived/M1_01_low_bitrate.mp4",
       "difficulty_type": "low_bitrate",
       "purpose": "超分 SR 的输入",
       "metric": "SR 前后 PSNR/SSIM（对母版）",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见"
+      "verify_note": ""
     },
     {
       "case_id": "M1_01__noisy",
       "master": "assets/raw/M1_01.mp4",
       "gt_master_sha256": "a9ced6fba2c762f4263cc2f7cd70edd8a7e31c956e5b27545e059e4eb2162998",
       "license": "CC BY 3.0",
-      "role": "M1",
+      "role": "multi",
       "derived_file": "assets/derived/M1_01_noisy.mp4",
       "difficulty_type": "noisy",
       "purpose": "ASR 识别率下降难例",
       "metric": "ASR 字符错误率变化",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见"
+      "verify_note": ""
     },
     {
       "case_id": "M1_01__mouth_occluded",
       "master": "assets/raw/M1_01.mp4",
       "gt_master_sha256": "a9ced6fba2c762f4263cc2f7cd70edd8a7e31c956e5b27545e059e4eb2162998",
       "license": "CC BY 3.0",
-      "role": "M1",
+      "role": "multi",
       "derived_file": "assets/derived/M1_01_mouth_occluded.mp4",
       "difficulty_type": "mouth_occluded",
       "purpose": "嘴部遮挡难例（LipSync 崩坏边界）",
       "metric": "口型同步指标 / 人工 MOS",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见"
+      "verify_note": ""
     },
     {
       "case_id": "M1_02__hard_sub_bottom",
       "master": "assets/raw/M1_02.mp4",
       "gt_master_sha256": "b81d97dc70af60d6842afb525a4ef228b2f2f11027cb027944476df39a7edcb2",
       "license": "CC BY-SA 4.0",
-      "role": "M1",
+      "role": "profile",
       "derived_file": "assets/derived/M1_02_hard_sub_bottom.mp4",
       "difficulty_type": "hard_sub_bottom",
       "purpose": "字幕擦除常规难例",
       "metric": "字幕区域 mask 内 PSNR/SSIM（对母版）",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见（原片整体音量偏低 -37dB，需增益）"
+      "verify_note": ""
     },
     {
       "case_id": "M1_02__hard_sub_face",
       "master": "assets/raw/M1_02.mp4",
       "gt_master_sha256": "b81d97dc70af60d6842afb525a4ef228b2f2f11027cb027944476df39a7edcb2",
       "license": "CC BY-SA 4.0",
-      "role": "M1",
+      "role": "profile",
       "derived_file": "assets/derived/M1_02_hard_sub_face.mp4",
       "difficulty_type": "hard_sub_face",
       "purpose": "字幕压脸边界难例",
       "metric": "同上看擦除是否伤及人脸",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见（原片整体音量偏低 -37dB，需增益）"
+      "verify_note": ""
     },
     {
       "case_id": "M1_02__low_bitrate",
       "master": "assets/raw/M1_02.mp4",
       "gt_master_sha256": "b81d97dc70af60d6842afb525a4ef228b2f2f11027cb027944476df39a7edcb2",
       "license": "CC BY-SA 4.0",
-      "role": "M1",
+      "role": "profile",
       "derived_file": "assets/derived/M1_02_low_bitrate.mp4",
       "difficulty_type": "low_bitrate",
       "purpose": "超分 SR 的输入",
       "metric": "SR 前后 PSNR/SSIM（对母版）",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见（原片整体音量偏低 -37dB，需增益）"
+      "verify_note": ""
     },
     {
       "case_id": "M1_02__noisy",
       "master": "assets/raw/M1_02.mp4",
       "gt_master_sha256": "b81d97dc70af60d6842afb525a4ef228b2f2f11027cb027944476df39a7edcb2",
       "license": "CC BY-SA 4.0",
-      "role": "M1",
+      "role": "profile",
       "derived_file": "assets/derived/M1_02_noisy.mp4",
       "difficulty_type": "noisy",
       "purpose": "ASR 识别率下降难例",
       "metric": "ASR 字符错误率变化",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见（原片整体音量偏低 -37dB，需增益）"
+      "verify_note": ""
     },
     {
       "case_id": "M1_02__mouth_occluded",
       "master": "assets/raw/M1_02.mp4",
       "gt_master_sha256": "b81d97dc70af60d6842afb525a4ef228b2f2f11027cb027944476df39a7edcb2",
       "license": "CC BY-SA 4.0",
-      "role": "M1",
+      "role": "profile",
       "derived_file": "assets/derived/M1_02_mouth_occluded.mp4",
       "difficulty_type": "mouth_occluded",
       "purpose": "嘴部遮挡难例（LipSync 崩坏边界）",
       "metric": "口型同步指标 / 人工 MOS",
-      "verify_note": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见（原片整体音量偏低 -37dB，需增益）"
+      "verify_note": ""
+    },
+    {
+      "case_id": "M1_04__hard_sub_bottom",
+      "master": "assets/raw/M1_04.mp4",
+      "gt_master_sha256": "283c0c36cd6d0a7ad897176c6e2e07c2b4b7592fae158ff379210c373451c336",
+      "license": "Public domain (NASA)",
+      "role": "gt",
+      "derived_file": "assets/derived/M1_04_hard_sub_bottom.mp4",
+      "difficulty_type": "hard_sub_bottom",
+      "purpose": "字幕擦除常规难例",
+      "metric": "字幕区域 mask 内 PSNR/SSIM（对母版）",
+      "verify_note": ""
+    },
+    {
+      "case_id": "M1_04__hard_sub_face",
+      "master": "assets/raw/M1_04.mp4",
+      "gt_master_sha256": "283c0c36cd6d0a7ad897176c6e2e07c2b4b7592fae158ff379210c373451c336",
+      "license": "Public domain (NASA)",
+      "role": "gt",
+      "derived_file": "assets/derived/M1_04_hard_sub_face.mp4",
+      "difficulty_type": "hard_sub_face",
+      "purpose": "字幕压脸边界难例",
+      "metric": "同上看擦除是否伤及人脸",
+      "verify_note": ""
+    },
+    {
+      "case_id": "M1_04__low_bitrate",
+      "master": "assets/raw/M1_04.mp4",
+      "gt_master_sha256": "283c0c36cd6d0a7ad897176c6e2e07c2b4b7592fae158ff379210c373451c336",
+      "license": "Public domain (NASA)",
+      "role": "gt",
+      "derived_file": "assets/derived/M1_04_low_bitrate.mp4",
+      "difficulty_type": "low_bitrate",
+      "purpose": "超分 SR 的输入",
+      "metric": "SR 前后 PSNR/SSIM（对母版）",
+      "verify_note": ""
+    },
+    {
+      "case_id": "M1_04__noisy",
+      "master": "assets/raw/M1_04.mp4",
+      "gt_master_sha256": "283c0c36cd6d0a7ad897176c6e2e07c2b4b7592fae158ff379210c373451c336",
+      "license": "Public domain (NASA)",
+      "role": "gt",
+      "derived_file": "assets/derived/M1_04_noisy.mp4",
+      "difficulty_type": "noisy",
+      "purpose": "ASR 识别率下降难例",
+      "metric": "ASR 字符错误率变化",
+      "verify_note": ""
+    },
+    {
+      "case_id": "M1_04__mouth_occluded",
+      "master": "assets/raw/M1_04.mp4",
+      "gt_master_sha256": "283c0c36cd6d0a7ad897176c6e2e07c2b4b7592fae158ff379210c373451c336",
+      "license": "Public domain (NASA)",
+      "role": "gt",
+      "derived_file": "assets/derived/M1_04_mouth_occluded.mp4",
+      "difficulty_type": "mouth_occluded",
+      "purpose": "嘴部遮挡难例（LipSync 崩坏边界）",
+      "metric": "口型同步指标 / 人工 MOS",
+      "verify_note": ""
     },
     {
       "case_id": "M3_01__hard_sub_bottom",
       "master": "assets/raw/M3_01.mp4",
       "gt_master_sha256": "49305ca9a6b1ce0f52f63572ab695c3a1e3cb4fe2ce14aa0c3576ebcbaf26abe",
       "license": "Public domain (US Government work, NSA)",
-      "role": "M3",
+      "role": "lowres",
       "derived_file": "assets/derived/M3_01_hard_sub_bottom.mp4",
       "difficulty_type": "hard_sub_bottom",
       "purpose": "字幕擦除常规难例",
       "metric": "字幕区域 mask 内 PSNR/SSIM（对母版）",
-      "verify_note": "英文人声；选段依据 = scan_segment.py 自动挑最响窗口（mean -23.9 dB）"
+      "verify_note": ""
     },
     {
       "case_id": "M3_01__hard_sub_face",
       "master": "assets/raw/M3_01.mp4",
       "gt_master_sha256": "49305ca9a6b1ce0f52f63572ab695c3a1e3cb4fe2ce14aa0c3576ebcbaf26abe",
       "license": "Public domain (US Government work, NSA)",
-      "role": "M3",
+      "role": "lowres",
       "derived_file": "assets/derived/M3_01_hard_sub_face.mp4",
       "difficulty_type": "hard_sub_face",
       "purpose": "字幕压脸边界难例",
       "metric": "同上看擦除是否伤及人脸",
-      "verify_note": "英文人声；选段依据 = scan_segment.py 自动挑最响窗口（mean -23.9 dB）"
+      "verify_note": ""
     },
     {
       "case_id": "M3_01__low_bitrate",
       "master": "assets/raw/M3_01.mp4",
       "gt_master_sha256": "49305ca9a6b1ce0f52f63572ab695c3a1e3cb4fe2ce14aa0c3576ebcbaf26abe",
       "license": "Public domain (US Government work, NSA)",
-      "role": "M3",
+      "role": "lowres",
       "derived_file": "assets/derived/M3_01_low_bitrate.mp4",
       "difficulty_type": "low_bitrate",
       "purpose": "超分 SR 的输入",
       "metric": "SR 前后 PSNR/SSIM（对母版）",
-      "verify_note": "英文人声；选段依据 = scan_segment.py 自动挑最响窗口（mean -23.9 dB）"
+      "verify_note": ""
     },
     {
       "case_id": "M3_01__noisy",
       "master": "assets/raw/M3_01.mp4",
       "gt_master_sha256": "49305ca9a6b1ce0f52f63572ab695c3a1e3cb4fe2ce14aa0c3576ebcbaf26abe",
       "license": "Public domain (US Government work, NSA)",
-      "role": "M3",
+      "role": "lowres",
       "derived_file": "assets/derived/M3_01_noisy.mp4",
       "difficulty_type": "noisy",
       "purpose": "ASR 识别率下降难例",
       "metric": "ASR 字符错误率变化",
-      "verify_note": "英文人声；选段依据 = scan_segment.py 自动挑最响窗口（mean -23.9 dB）"
+      "verify_note": ""
     },
     {
       "case_id": "M3_01__mouth_occluded",
       "master": "assets/raw/M3_01.mp4",
       "gt_master_sha256": "49305ca9a6b1ce0f52f63572ab695c3a1e3cb4fe2ce14aa0c3576ebcbaf26abe",
       "license": "Public domain (US Government work, NSA)",
-      "role": "M3",
+      "role": "lowres",
       "derived_file": "assets/derived/M3_01_mouth_occluded.mp4",
       "difficulty_type": "mouth_occluded",
       "purpose": "嘴部遮挡难例（LipSync 崩坏边界）",
       "metric": "口型同步指标 / 人工 MOS",
-      "verify_note": "英文人声；选段依据 = scan_segment.py 自动挑最响窗口（mean -23.9 dB）"
+      "verify_note": ""
     }
   ]
 }

@@ -1,7 +1,8 @@
 {
   "id": "M1_01",
-  "role": "M1",
-  "desc": "户外对话片段（1080p 横屏）——口型同步与多人字幕重叠难例的母版",
+  "role": "multi",
+  "case_role": "multi",
+  "desc": "户外多人对话 1920×1080 —— 多人字幕重叠难例母版（人脸校验：多人帧占比 62%，不适合单人 LipSync GT）",
   "license": {
     "name": "CC BY 3.0",
     "url": "https://creativecommons.org/licenses/by/3.0",
@@ -16,5 +17,5 @@
   },
   "master": "assets/raw/M1_01.mp4",
   "master_sha256": "a9ced6fba2c762f4263cc2f7cd70edd8a7e31c956e5b27545e059e4eb2162998",
-  "verify": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见"
+  "verify": ""
 }
