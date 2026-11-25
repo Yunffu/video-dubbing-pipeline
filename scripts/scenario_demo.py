@@ -74,6 +74,17 @@ def raw_path(aid: str) -> Path:
     return p
 
 
+def rel(p) -> str:
+    """仓库内的路径写成仓库相对路径。
+
+    证据文件（run.json / lama_report.json）是要公开的，不能带本机目录结构。
+    """
+    try:
+        return str(Path(p).resolve().relative_to(ROOT)).replace("\\", "/")
+    except (ValueError, OSError):
+        return str(p)
+
+
 # ---------------------------------------------------------------- 引擎
 
 def _lama_engine():
@@ -139,7 +150,7 @@ def erase_to_h264(video: Path, out: Path, rect: tuple[int, int, int, int],
         raise SystemExit(f"ffmpeg 编码失败（{engine}）")
     return {"engine": engine, "frames": frames, "fps": fps,
             "elapsed_ms": int((time.time() - t0) * 1000),
-            "rect": list(rect), "output": str(out)}
+            "rect": list(rect), "output": rel(out)}
 
 
 # ---------------------------------------------------------------- 字幕区检测
@@ -253,7 +264,7 @@ def dub_chain(src_video: Path, work: Path, src_lang: str, tgt_lang: str,
     # 1) 擦字幕（已有产物就复用 —— 擦一遍 40s，没必要反复重来）
     erased = work / "erased.mp4"
     if erased.exists():
-        erase_info = {"engine": engine, "reused": True, "output": str(erased)}
+        erase_info = {"engine": engine, "reused": True, "output": rel(erased)}
         print(f"[erase] 复用 {erased}")
     else:
         t0 = time.time()
@@ -328,12 +339,12 @@ def dub_chain(src_video: Path, work: Path, src_lang: str, tgt_lang: str,
     final = work / "final.mp4"
     ok, err = burn_in(base, ass_path, final)
     rec["stages"].append({"name": "burn_subtitles", "ok": ok, "error": err,
-                          "source": str(base)})
+                          "source": rel(base)})
     print(f"[subtitle] 烧录 {'OK' if ok else '失败: ' + err} → {final}")
 
-    rec.update({"erased": str(erased), "ass": str(ass_path),
-                "dub": str(dub_mp4) if dub_mp4 else None,
-                "final": str(final) if ok else None,
+    rec.update({"erased": rel(erased), "ass": rel(ass_path),
+                "dub": rel(dub_mp4) if dub_mp4 else None,
+                "final": rel(final) if ok else None,
                 "segments": [{"index": s.index, "start": s.start, "end": s.end,
                               "src": a.text, "tgt": s.text}
                              for a, s in zip(asr.segments, tr.segments)]})
@@ -657,7 +668,7 @@ def scenario_s4(out_dir: Path) -> dict:
     t0 = time.time()
     eng = _lama_engine()
     sess = eng.sess
-    rec["model"] = str(eng.path)
+    rec["model"] = rel(eng.path)
     rec["model_mb"] = round(eng.path.stat().st_size / 1e6, 1)
     rec["session_load_ms"] = int((time.time() - t0) * 1000)
 

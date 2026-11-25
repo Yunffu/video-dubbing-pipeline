@@ -1,5 +1,31 @@
 # video-dubbing-pipeline
 
+## 看效果（30 秒版）
+
+成片视频体积大，**不入库**；下载在 [Releases](https://github.com/Yunffu/video-dubbing-pipeline/releases)（附件，不进 git 历史）。
+下面四张接触印相是**入库的证据**，每张 = 原片 / 擦除后 / 成片 三格对比。
+
+| 场景一 · 赛博出海（中文硬字幕 → 擦除 → 英译 → 英配 → 成片） | 场景二 · 合法搬运（外片硬字幕 → 擦除 → 换授权字幕 + 中配） |
+|---|---|
+| ![S1_02](results/scenarios/S1_02/contact_sheet.png) | ![S2_01](results/scenarios/S2_01/contact_sheet.png) |
+
+| 场景三 · 方案A vs 方案B（同 mask 只换修补引擎） | 场景四 · LaMa ONNX 本机实测 |
+|---|---|
+| ![S1_02 compare](results/scenarios/s3/S1_02_compare.png) | ![LaMa unit](results/scenarios/s4/lama_unit.png) |
+
+一句话结论（细节见 [`docs/notes/15-技术报告.md`](docs/notes/15-技术报告.md)）：
+
+| 结论 | 数字 |
+|---|---|
+| 字幕擦除**不误伤画面**（区外硬约束） | mask 外恒 **99.0 dB**（8 case × 3 引擎） |
+| 内容感知模型（LaMa）在**人脸字幕**上占优 | PSNR in **+1 ~ +3 dB**，但 CPU 上慢 **8~31 倍** |
+| 收紧字幕 mask **是负收益**（已推翻的假设） | 面积省 25%，文字行召回掉到 0.928 → 3/4 case PSNR 反降 |
+| 端到端成本 | 40s 成片 **4 次 DeepSeek 调用**，翻译层可离线三级降级 |
+| 抗压 | 故障注入 **7/7 PASS**（断网 / 401 / 429 / 5xx / 媒体损坏） |
+
+完整证据链：`results/scenarios/README.md`（四场景汇总）、`results/scenarios/s3/compare_table.md`（方案对照表）、
+`results/*/metrics.jsonl`（跑分逐行留痕）。
+
 ## Purpose
 
 多语言视频译制 Pipeline：串联 ASR → 翻译 → TTS → 字幕处理 → LipSync → 视频合成，
@@ -16,6 +42,7 @@
 - [x] 评测层（`eval/runner.py` 跑分 + 回归 diff + 人评工作台 + 成本账单）
 - [x] 抗压与降级（7/7 故障注入 PASS：断网 / 401 / 429 / 5xx / 媒体损坏）
 - [x] 接入层（凭据治理 / 白名单 / 限流 / 退避 / 熔断 / 审计日志）
+- [x] 四条真实片源业务链（出海 / 合法搬运 / 内部工具对比 / 选型探路），见 `results/scenarios/README.md`
 - [ ] LipSync（**明确不做**，见 `docs/notes/15-技术报告.md` 的能力边界声明）
 - [ ] 人评打分（工具已就绪，**等人打分**）
 

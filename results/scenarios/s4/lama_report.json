@@ -1,5 +1,5 @@
 {
-  "model": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\_work\\models\\lama_fp32.onnx",
+  "model": "_work/models/lama_fp32.onnx",
   "model_mb": 208.0,
   "session_load_ms": 7843,
   "normalize_trials": [

@@ -16,7 +16,7 @@
         720,
         1092
       ],
-      "output": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\erased.mp4"
+      "output": "results/scenarios/S2_03/erased.mp4"
     },
     {
       "name": "asr",
@@ -84,7 +84,7 @@
       "name": "burn_subtitles",
       "ok": true,
       "error": "",
-      "source": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\dub.mp4"
+      "source": "results/scenarios/S2_03/dub.mp4"
     },
     {
       "name": "burn_subs_only",
@@ -92,10 +92,10 @@
       "error": ""
     }
   ],
-  "erased": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\erased.mp4",
-  "ass": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\subtitles.ass",
-  "dub": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\dub.mp4",
-  "final": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\final.mp4",
+  "erased": "results/scenarios/S2_03/erased.mp4",
+  "ass": "results/scenarios/S2_03/subtitles.ass",
+  "dub": "results/scenarios/S2_03/dub.mp4",
+  "final": "results/scenarios/S2_03/final.mp4",
   "segments": [
     {
       "index": 1,
@@ -166,6 +166,6 @@
       ]
     }
   },
-  "subs_only": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\subs_only_zh.mp4",
-  "contact_sheet": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\contact_sheet.png"
+  "subs_only": "results/scenarios/S2_03/subs_only_zh.mp4",
+  "contact_sheet": "results/scenarios/S2_03/contact_sheet.png"
 }

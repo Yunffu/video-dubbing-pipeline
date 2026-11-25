@@ -16,7 +16,7 @@
         854,
         460
       ],
-      "output": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\erased.mp4"
+      "output": "results/scenarios/S1_02/erased.mp4"
     },
     {
       "name": "asr",
@@ -84,13 +84,13 @@
       "name": "burn_subtitles",
       "ok": true,
       "error": "",
-      "source": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\dub.mp4"
+      "source": "results/scenarios/S1_02/dub.mp4"
     }
   ],
-  "erased": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\erased.mp4",
-  "ass": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\subtitles.ass",
-  "dub": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\dub.mp4",
-  "final": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\final.mp4",
+  "erased": "results/scenarios/S1_02/erased.mp4",
+  "ass": "results/scenarios/S1_02/subtitles.ass",
+  "dub": "results/scenarios/S1_02/dub.mp4",
+  "final": "results/scenarios/S1_02/final.mp4",
   "segments": [
     {
       "index": 1,
@@ -213,5 +213,5 @@
       ]
     }
   },
-  "contact_sheet": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\contact_sheet.png"
+  "contact_sheet": "results/scenarios/S1_02/contact_sheet.png"
 }
