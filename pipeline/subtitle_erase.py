@@ -336,3 +336,168 @@ def evaluate_erase(erased: Path, gt: Path, mask_rows: tuple[int, int],
             "threshold_hint": {"psnr_in_mask": 30, "psnr_out_mask": 40},
             "psnr_source": "file（落盘后，含重编码损失）",
             "source": "合成 GT 法（母版即 GT）"}
+
+
+# ---------------------------------------------------------------------------
+# 局部法字幕行检测（针对「画面本身很忙」的素材）
+# ---------------------------------------------------------------------------
+
+LOCAL_MIN_RUN = 8          # 文字行最小连续高度（px）
+LOCAL_MAX_RUN_RATIO = 0.25  # 单个文字带最大占画面高度比例
+LOCAL_SPIKE = 2.0          # 相对上下邻居的密度突增倍数
+LOCAL_ABS_FLOOR = 30.0     # 行密度的绝对下限
+GAP_TOL_FRAC = 0.025      # 合并文字行段时允许的最大空隙（按画面高比例；
+                          # 实测双行字幕两条线之间的「密度低谷」约 15px @720p ≈ 0.021h）
+
+
+def _row_density(gray: np.ndarray) -> np.ndarray:
+    """每行的拉普拉斯方差（文字行的边缘密度远高于平滑背景）。"""
+    return cv2.Laplacian(gray, cv2.CV_64F).var(axis=1)
+
+
+def _local_runs(dens: np.ndarray, y_from: int, y_to: int) -> list[tuple[int, int]]:
+    """在 [y_from, y_to) 里找「相对上下邻居突然变密」的连续行段。
+
+    为什么用局部基准而不是全局中位数：
+      全局法（detect_subtitle_band）拿「全帧中位数」当基准，
+      动画/快剪素材整帧边缘密度都很高 → 字幕行不再突出 → 判定失效。
+      实测 S2_02（手绘动画）：全局法 hit_ratio=0.08（12 帧只中 1 帧）。
+    """
+    n = len(dens)
+    runs: list[tuple[int, int]] = []
+    cur: list[int] = []
+    for y in range(y_from, min(y_to, n)):
+        lo = max(y - 9, 0)
+        hi = min(y + 10, n)
+        neigh = np.concatenate([dens[lo:max(y - 3, 0)], dens[min(y + 4, n):hi]])
+        base = float(np.median(neigh)) if neigh.size else 0.0
+        if dens[y] >= LOCAL_ABS_FLOOR and dens[y] >= LOCAL_SPIKE * max(base, 1.0):
+            cur.append(y)
+        else:
+            if len(cur) >= LOCAL_MIN_RUN:
+                runs.append((cur[0], cur[-1] + 1))
+            cur = []
+    if len(cur) >= LOCAL_MIN_RUN:
+        runs.append((cur[0], cur[-1] + 1))
+    return runs
+
+
+def detect_text_rows(video: Path, n_frames: int = 24,
+                     bottom_fraction: float = 0.45) -> dict:
+    """逐帧用局部法找文字行，再在帧之间取一致的行带。
+
+    返回 {found, y0, y1, hit_ratio, kind:"local_rows", ...}
+    与 detect_subtitle_band 同结构，下游 region_of / make_mask 不用改。
+
+    附带收益：这条路径给出的行带**比 20 带粗粒度法更贴近真实文字**，
+    直接服务于「收紧 mask」这件事（mask 越贴合文字，修补越不容易误伤背景）。
+    """
+    cap = cv2.VideoCapture(str(video))
+    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    if total <= 0:
+        cap.release()
+        return {"found": False, "reason": "读不到帧"}
+    idxs = np.linspace(0, total - 1, min(n_frames, total)).astype(int)
+    hits: list[tuple[int, int]] = []
+    h = None
+    for i in idxs:
+        cap.set(cv2.CAP_PROP_POS_FRAMES, int(i))
+        ok, fr = cap.read()
+        if not ok:
+            continue
+        if h is None:
+            h = fr.shape[0]
+        dens = _row_density(cv2.cvtColor(fr, cv2.COLOR_BGR2GRAY))
+        y_from = int(h * (1 - bottom_fraction))
+        runs = _local_runs(dens, y_from, h)
+        runs = [r for r in runs
+                if (r[1] - r[0]) <= LOCAL_MAX_RUN_RATIO * h]
+        if not runs:
+            continue
+        # 取最靠近画面底部的一条（字幕习惯在下三分之一）
+        lo, hi = max(runs, key=lambda r: r[1])
+        hits.append((lo, hi))
+    cap.release()
+    if not hits:
+        return {"found": False, "reason": "局部法未检出文字行"}
+
+    y0 = int(np.median([a for a, _ in hits]))
+    y1 = int(np.median([b for _, b in hits]))
+    y0 = max(y0 - 3, 0)
+    y1 = min(y1 + 3, h or 720)
+    return {"found": True, "kind": "local_rows", "y0": y0, "y1": y1,
+            "hit_ratio": round(len(hits) / max(len(idxs), 1), 2),
+            "per_frame_hits": len(hits),
+            "n_frames": int(len(idxs))}
+
+
+def tighten_band(video: Path, y0: int, y1: int, n_frames: int = 12,
+                 rel: float = 0.25, abs_floor: float = 25.0) -> tuple[int, int]:
+    """在**已检测出的横带内**再定位真实文字行，把 mask 收紧。
+
+    为什么要这一步（任务 #6）：
+      20 带粗粒度法给出的带子通常比文字本身大一圈（实测 M1_01：
+      带 rows 806-1030，占画面高 20.7%；真实文字只占 ~60px）。
+      带子里绝大部分是**干净背景** —— 拿它当 mask 去做修补，等于
+      在大片本来没问题的地方动手，既拖慢又更容易糊。
+      收紧到文字行后，mask 面积比从 0.21 降到 ~0.08，
+      同一套引擎的 mask 内 PSNR 明显更高（oracle mask 口径下 29.96dB）。
+
+    做法：带内逐行密度取**时间中位数**（去编码噪声），
+          阈值 = max(abs_floor, rel × 带内 75 分位)，
+          超过阈值的连续行（含 ≤2 行空隙）就是文字行。
+    """
+    cap = cv2.VideoCapture(str(video))
+    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    if total <= 0:
+        cap.release()
+        return y0, y1
+    idxs = np.linspace(0, total - 1, min(n_frames, total)).astype(int)
+    rows = []
+    h = None
+    for i in idxs:
+        cap.set(cv2.CAP_PROP_POS_FRAMES, int(i))
+        ok, fr = cap.read()
+        if not ok:
+            continue
+        if h is None:
+            h = fr.shape[0]
+        rows.append(_row_density(cv2.cvtColor(fr, cv2.COLOR_BGR2GRAY)))
+    cap.release()
+    if not rows:
+        return y0, y1
+    prof = np.median(np.array(rows), axis=0)
+    h = h or len(prof)
+    lo = max(0, min(y0, h - 2))
+    hi = max(lo + 2, min(y1, h))
+    seg = prof[lo:hi]
+    if seg.size == 0:
+        return y0, y1
+    thr = max(abs_floor, rel * float(np.percentile(seg, 90)))
+    on = seg >= thr
+    # 允许 ≤GAP_TOL 行的空隙：**烧录字幕通常是两行**，两行之间有 5 行左右的缝
+    # （实测 M1_04：oracle 行 548-602 与 608-661，缝在 603-607）。
+    # 只取「最长的一段」会丢掉其中一行 → 字幕擦不干净（实测 recall 只有 0.40）。
+    gap_tol = max(6, int(GAP_TOL_FRAC * h))
+    merged = []
+    cur = None
+    for i, v in enumerate(on):
+        if v:
+            if cur is None:
+                cur = [i, i]
+            else:
+                cur[1] = i
+        else:
+            if cur is not None and (i - cur[1]) > gap_tol:
+                merged.append(tuple(cur))
+                cur = None
+    if cur is not None:
+        merged.append(tuple(cur))
+    if not merged:
+        return y0, y1
+    a, b = max(merged, key=lambda r: sum(on[r[0]:r[1]]))
+    ny0 = max(lo + a - 2, 0)
+    ny1 = min(lo + b + 3, h)
+    if ny1 - ny0 < 8:      # 收得太狠就放弃，保持原带
+        return y0, y1
+    return ny0, ny1

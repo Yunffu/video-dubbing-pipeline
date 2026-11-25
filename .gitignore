@@ -27,3 +27,8 @@ results/*/work/
 
 # 人评成片（体积大，可由 make_items.py 重建）
 results/human_review/items/*.mp4
+
+# 场景成片与配音轨（合计 ~100 MB，可由 scripts/scenario_demo.py 重建；
+# 证据链是每个场景的 run.json + subtitles.srt/ass + 对比表，入库）
+results/scenarios/**/*.mp4
+results/scenarios/**/*.wav

@@ -1,0 +1,171 @@
+{
+  "label": "合法搬运·外语→中文字幕+中文配音",
+  "src_lang": "en",
+  "tgt_lang": "zh",
+  "engine": "opencv_telea",
+  "stages": [
+    {
+      "name": "erase",
+      "engine": "opencv_telea",
+      "frames": 626,
+      "fps": 25.0,
+      "elapsed_ms": 76224,
+      "rect": [
+        0,
+        892,
+        720,
+        1092
+      ],
+      "output": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\erased.mp4"
+    },
+    {
+      "name": "asr",
+      "provider": "faster_whisper",
+      "language": "en",
+      "segments": 5,
+      "elapsed_ms": 2418,
+      "degraded": false,
+      "extra": {
+        "model_load_ms": 43217,
+        "detect_language": "en",
+        "language_probability": 1.0,
+        "audio_duration": 25.0,
+        "segments": 5,
+        "beam_size": 1,
+        "vad": true,
+        "vad_fallback": false,
+        "realtime_factor": 0.097,
+        "attempts": []
+      }
+    },
+    {
+      "name": "translate",
+      "provider": "deepseek",
+      "model": "deepseek-chat",
+      "segments": 5,
+      "elapsed_ms": 1143,
+      "degraded": false,
+      "warnings": [],
+      "cost": 300
+    },
+    {
+      "name": "tts",
+      "provider": "edge_tts",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "segments": 5,
+      "elapsed_ms": 14447,
+      "degraded": false
+    },
+    {
+      "name": "compose_audio",
+      "ok": true,
+      "error": "",
+      "stats": {
+        "segments": 5,
+        "stretched": 5,
+        "overshoot": 4,
+        "max_required_tempo": 1.528,
+        "min_required_tempo": 0.768,
+        "max_applied_tempo": 1.25,
+        "min_applied_tempo": 0.8,
+        "tempo_bounds": [
+          0.8,
+          1.25
+        ],
+        "mean_abs_stretch": 0.2292
+      }
+    },
+    {
+      "name": "mux",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "name": "burn_subtitles",
+      "ok": true,
+      "error": "",
+      "source": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\dub.mp4"
+    },
+    {
+      "name": "burn_subs_only",
+      "ok": true,
+      "error": ""
+    }
+  ],
+  "erased": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\erased.mp4",
+  "ass": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\subtitles.ass",
+  "dub": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\dub.mp4",
+  "final": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\final.mp4",
+  "segments": [
+    {
+      "index": 1,
+      "start": 0.0,
+      "end": 4.26,
+      "src": "to the People's Republic of China. And this week I'm in San Francisco, California, with",
+      "tgt": "来到中华人民共和国。本周我在加州旧金山，与"
+    },
+    {
+      "index": 2,
+      "start": 4.26,
+      "end": 9.6,
+      "src": "President Biden and Secretary Blinken for their meeting with President Xi Jinping of China.",
+      "tgt": "拜登总统和布林肯国务卿一同参加他们与中国习近平主席的会晤。"
+    },
+    {
+      "index": 3,
+      "start": 9.6,
+      "end": 13.84,
+      "src": "President Biden and he met for four hours, and it was a really important and consequential",
+      "tgt": "拜登总统和他会晤了四个小时，这是一次非常重要且具有重大影响的"
+    },
+    {
+      "index": 4,
+      "start": 13.84,
+      "end": 18.44,
+      "src": "meeting. They announced that the United States and China will resume military-to-military",
+      "tgt": "会晤。他们宣布美国和中国将恢复各级军事对军事"
+    },
+    {
+      "index": 5,
+      "start": 18.44,
+      "end": 25.0,
+      "src": "contacts at all levels. That's very important to assure stability in our military relationship.",
+      "tgt": "接触。这对确保我们军事关系的稳定非常重要。"
+    }
+  ],
+  "asset": {
+    "id": "S2_03",
+    "desc": "美国务卿 Nicholas Burns 谈中美会谈（官方发布，中文字幕版）——英语内容 + 真烧录中文字幕，公共领域",
+    "license": {
+      "name": "Public domain",
+      "url": "",
+      "author": "U.S. Department of State",
+      "credit": "File:Ambassador Nicholas Burns recaps ... (Chinese subtitles), via Wikimedia Commons"
+    },
+    "clip": {
+      "start": 2,
+      "dur": 25
+    },
+    "subtitle_lang": "zh"
+  },
+  "detection": {
+    "kind": "bottom_band",
+    "detail": {
+      "found": true,
+      "bands": [
+        14,
+        16
+      ],
+      "y0": 892,
+      "y1": 1092,
+      "hit_ratio": 1.0,
+      "mean_ratio": 256.57,
+      "coarse": [
+        892,
+        1092
+      ]
+    }
+  },
+  "subs_only": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\subs_only_zh.mp4",
+  "contact_sheet": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_03\\contact_sheet.png"
+}

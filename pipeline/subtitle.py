@@ -79,20 +79,24 @@ def burn_in(video: Path, ass_path: Path, out_path: Path,
     fb = media_probe.ffmpeg_bin()
     if not fb:
         return False, "找不到 ffmpeg"
-    cmd = [fb, "-y", "-v", "error", "-i", str(video)]
+    # 字幕路径交给 ffmpeg 的 filter 参数时，`:` `\` `'` 都要转义，
+    # 而且路径里带中文/空格时 ffmpeg 的 filter 解析器仍会挑眉。
+    # 最稳的做法：**切到字幕所在目录，用纯文件名引用**，其余路径给绝对路径。
+    ass_path = Path(ass_path)
+    cwd = ass_path.resolve().parent
+    cmd = [fb, "-y", "-v", "error", "-i", str(Path(video).resolve())]
     if audio:
-        cmd += ["-i", str(audio)]
-    ass = str(ass_path).replace("\\", "/").replace(":", "\\:")
-    vf = f"ass=filename={ass}"
+        cmd += ["-i", str(Path(audio).resolve())]
+    vf = "ass=filename=" + ass_path.name.replace(":", "\\:").replace("'", "\\'")
     cmd += ["-vf", vf]
     if audio:
         cmd += ["-map", "0:v", "-map", "1:a"]
     else:
         cmd += ["-map", "0:v", "-map", "0:a?"]
     cmd += ["-c:v", "libx264", "-preset", "veryfast", "-crf", "20",
-            "-c:a", "aac", "-b:a", "128k", str(out_path)]
+            "-c:a", "aac", "-b:a", "128k", str(Path(out_path).resolve())]
     r = subprocess.run(cmd, capture_output=True, text=True,
-                       encoding="utf-8", errors="replace")
+                       encoding="utf-8", errors="replace", cwd=str(cwd))
     if r.returncode != 0:
         return False, (r.stderr or "burn-in failed")[:400]
     return True, ""

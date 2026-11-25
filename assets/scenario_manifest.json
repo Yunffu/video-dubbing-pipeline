@@ -1,0 +1,138 @@
+{
+  "_comment": "场景素材登记表：真实片源（Wikimedia Commons，许可可程序化核验）。",
+  "_why_real": "四个业务场景要验的是真实内容上的真实问题（真硬字幕、真方言、真外语片、真动画帧），不是合成理想素材。所以这一批与 assets/manifest.json 的 M1_* 派生难例分工不同：M1_* 是「GT 可控的评测集」，S* 是「真实业务的输入」。",
+  "_redline": "不用 B 站站内视频；只用 Commons 上 CC / PD / GODL 的片源；母版不入库（体积），由 scripts/fetch_scenario_assets.py + SHA256 确定性重建。",
+  "_sha256_rule": "首次下载时由 fetch_scenario_assets.py 计算并回写本文件；此后每次重建都比对校验和。",
+  "assets": [
+    {
+      "id": "S1_02",
+      "scenario": "s1",
+      "role": "赛博出海-中文母片",
+      "desc": "上海电视节白玉兰奖新闻报道（CNS）——标准普通话播音 + 真烧录中文字幕",
+      "source": {
+        "title": "File:聚焦上海电视节：倪大红凭“苏大强”获最佳男主角.webm",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/f/ff/%E8%81%9A%E7%84%A6%E4%B8%8A%E6%B5%B7%E7%94%B5%E8%A7%86%E8%8A%82%EF%BC%9A%E5%80%AA%E5%A4%A7%E7%BA%A2%E5%87%AD%E2%80%9C%E8%8B%8F%E5%A4%A7%E5%BC%BA%E2%80%9D%E8%8E%B7%E6%9C%80%E4%BD%B3%E7%94%B7%E4%B8%BB%E8%A7%92.webm",
+        "sha256": "a09db5b3c4933f28d8c2077ceb1ef3b84a20fec785421a38b27eedd138ca1ea2",
+        "bytes": 13793246,
+        "ext": ".webm"
+      },
+      "license": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0",
+        "author": "CNS 视频",
+        "credit": "File:聚焦上海电视节：倪大红凭“苏大强”获最佳男主角.webm, via Wikimedia Commons"
+      },
+      "audio_lang": "zh",
+      "subtitle_lang": "zh",
+      "clip": {
+        "start": 30,
+        "dur": 40
+      },
+      "notes": "真实硬字幕在画面底部 rows≈396-435；ASR 识别到 55 段标准普通话（lang=zh）"
+    },
+    {
+      "id": "S1_03",
+      "scenario": "s1",
+      "role": "赛博出海-中文母片",
+      "desc": "《觉醒年代》香港首映新闻（CNS）——普通话播报 + 真烧录中文字幕",
+      "source": {
+        "title": "File:电视剧《觉醒年代》香港首映 将以普通话于黄金时段播放.webm",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/40/%E7%94%B5%E8%A7%86%E5%89%A7%E3%80%8A%E8%A7%89%E9%86%92%E5%B9%B4%E4%BB%A3%E3%80%8B%E9%A6%99%E6%B8%AF%E9%A6%96%E6%98%A0_%E5%B0%86%E4%BB%A5%E6%99%AE%E9%80%9A%E8%AF%9D%E4%BA%8E%E9%BB%84%E9%87%91%E6%97%B6%E6%AE%B5%E6%92%AD%E6%94%BE.webm",
+        "sha256": "20a744e82d925dc7146b5ab1e68722005a811d17d6ec4ca28754d67722e61135",
+        "bytes": 4989569,
+        "ext": ".webm"
+      },
+      "license": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0",
+        "author": "CNS 视频",
+        "credit": "File:电视剧《觉醒年代》香港首映 将以普通话于黄金时段播放.webm, via Wikimedia Commons"
+      },
+      "audio_lang": "zh",
+      "subtitle_lang": "zh",
+      "clip": {
+        "start": 35,
+        "dur": 28
+      },
+      "notes": "字幕带 rows≈335-406 窗口改到 35-63s：原 6-36s 窗口落在 VAD 的超长语音块里，ASR 只切出 3 段；35s 之后是每 3s 一句的清晰问答。"
+    },
+    {
+      "id": "S2_01",
+      "scenario": "s2",
+      "role": "合法搬运-外语母片",
+      "desc": "Sojo 大学英文宣传片（日语字幕版）——英语内容 + 真烧录日文字幕",
+      "source": {
+        "title": "File:Introducing Sojo University (English with Japanese subtitles, condensed) （英語版大学紹介動画・短篇、日本語字幕入り）.webm",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Introducing_Sojo_University_%28English_with_Japanese_subtitles%2C_condensed%29_%EF%BC%88%E8%8B%B1%E8%AA%9E%E7%89%88%E5%A4%A7%E5%AD%A6%E7%B4%B9%E4%BB%8B%E5%8B%95%E7%94%BB%E3%83%BB%E7%9F%AD%E7%AF%87%E3%80%81%E6%97%A5%E6%9C%AC%E8%AA%9E%E5%AD%97%E5%B9%95%E5%85%A5%E3%82%8A%EF%BC%89.webm",
+        "sha256": "cbfeaf2a66eead3542d04b62bc6084e20a351f406d06b148adaae1eeefedf379",
+        "bytes": 258989950,
+        "ext": ".webm"
+      },
+      "license": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0",
+        "author": "Sojo University",
+        "credit": "File:Introducing Sojo University (English with Japanese subtitles, condensed), via Wikimedia Commons"
+      },
+      "audio_lang": "en",
+      "subtitle_lang": "ja",
+      "clip": {
+        "start": 30,
+        "dur": 30
+      },
+      "notes": "日语字幕带 rows≈899-1016；1920x1080 → 统一降到 1280 宽便于 CPU 处理"
+    },
+    {
+      "id": "S2_03",
+      "scenario": "s2",
+      "role": "合法搬运-外语母片",
+      "desc": "美国务卿 Nicholas Burns 谈中美会谈（官方发布，中文字幕版）——英语内容 + 真烧录中文字幕，公共领域",
+      "source": {
+        "title": "File:Ambassador Nicholas Burns recaps what President Biden and People's Republic of China President Xi Jinping discussed during their 4-hour meeting in San Francisco (Chinese subtitles).webm",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Ambassador_Nicholas_Burns_recaps_what_President_Biden_and_People%27s_Republic_of_China_President_Xi_Jinping_discussed_during_their_4-hour_meeting_in_San_Francisco_%28Chinese_subtitles%29.webm",
+        "sha256": "06c19c1398555f6615be0574bb888c1e96e8671b3e48b0527eb8ad93c8408514",
+        "bytes": 5444131,
+        "ext": ".webm"
+      },
+      "license": {
+        "name": "Public domain",
+        "url": "",
+        "author": "U.S. Department of State",
+        "credit": "File:Ambassador Nicholas Burns recaps ... (Chinese subtitles), via Wikimedia Commons"
+      },
+      "audio_lang": "en",
+      "subtitle_lang": "zh",
+      "clip": {
+        "start": 2,
+        "dur": 25
+      },
+      "notes": "竖屏 720x1280；这条是「原片自带中文字幕」→ 合法搬运里要处理的是「字幕版权/是否沿用」"
+    },
+    {
+      "id": "S2_02",
+      "scenario": "s2",
+      "role": "合法搬运-外语母片",
+      "desc": "Spooky Month Short: Streber's Rehearsal（手绘动画短片）——动画帧 + 烧录英文字幕，是闪烁/拖影最难的一类",
+      "source": {
+        "title": "File:Spooky Month Short - Streber's Rehearsal.webm",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Spooky_Month_Short_-_Streber%27s_Rehearsal.webm",
+        "sha256": "fbd7cda107ac2c9b9964dafbbd0af7a830faa7c5cda8b72c8f8b556aeebecd87",
+        "bytes": 8023012,
+        "ext": ".webm"
+      },
+      "license": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0",
+        "author": "Sr Pelo",
+        "credit": "File:Spooky Month Short - Streber's Rehearsal.webm, via Wikimedia Commons"
+      },
+      "audio_lang": "en",
+      "subtitle_lang": "en",
+      "clip": {
+        "start": 10,
+        "dur": 25
+      },
+      "notes": "动画 = 逐帧独立修补最容易闪烁/拖影的素材类型"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "id": "S2_03",
+  "scenario": "s2",
+  "role": "合法搬运-外语母片",
+  "desc": "美国务卿 Nicholas Burns 谈中美会谈（官方发布，中文字幕版）——英语内容 + 真烧录中文字幕，公共领域",
+  "license": {
+    "name": "Public domain",
+    "url": "",
+    "author": "U.S. Department of State",
+    "credit": "File:Ambassador Nicholas Burns recaps ... (Chinese subtitles), via Wikimedia Commons"
+  },
+  "source_title": "File:Ambassador Nicholas Burns recaps what President Biden and People's Republic of China President Xi Jinping discussed during their 4-hour meeting in San Francisco (Chinese subtitles).webm",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Ambassador_Nicholas_Burns_recaps_what_President_Biden_and_People%27s_Republic_of_China_President_Xi_Jinping_discussed_during_their_4-hour_meeting_in_San_Francisco_%28Chinese_subtitles%29.webm",
+  "source_sha256": "06c19c1398555f6615be0574bb888c1e96e8671b3e48b0527eb8ad93c8408514",
+  "clip": {
+    "start": 2,
+    "dur": 25
+  },
+  "audio_lang": "en",
+  "subtitle_lang": "zh",
+  "notes": "竖屏 720x1280；这条是「原片自带中文字幕」→ 合法搬运里要处理的是「字幕版权/是否沿用」",
+  "master": "assets/raw/S2_03.mp4",
+  "master_sha256": "b25163a6af786cfb657c20df9e414b83c912031f80d2c537fa365a6303b7a6da"
+}

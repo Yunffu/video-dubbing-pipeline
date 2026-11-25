@@ -46,23 +46,37 @@ class FasterWhisperProvider:
             lang = None
 
         t1 = time.time()
-        segments, info = model.transcribe(
-            media,
-            language=lang,
-            beam_size=self.cfg.beam_size,
-            vad_filter=self.cfg.vad,
-            initial_prompt=self.cfg.initial_prompt or None,
-        )
-        segs = []
-        for i, s in enumerate(segments):
-            text = (s.text or "").strip()
-            if not text:
-                continue
-            segs.append(SubtitleSegment(index=len(segs) + 1,
-                                        start=round(float(s.start), 3),
-                                        end=round(float(s.end), 3),
-                                        text=text))
+
+        def run(vad: bool):
+            segments, info = model.transcribe(
+                media,
+                language=lang,
+                beam_size=self.cfg.beam_size,
+                vad_filter=vad,
+                initial_prompt=self.cfg.initial_prompt or None,
+            )
+            out = []
+            for s in segments:
+                text = (s.text or "").strip()
+                if not text:
+                    continue
+                out.append(SubtitleSegment(index=len(out) + 1,
+                                           start=round(float(s.start), 3),
+                                           end=round(float(s.end), 3),
+                                           text=text))
+            return out, info
+
+        segments, info = run(self.cfg.vad)
+        vad_fallback = False
+        # VAD 兜底：Silero VAD 在本项目素材上会把**整段语音判成非语音**，
+        # 导致 ASR 返回 0 段（实测 M1_04 母版：VAD 开 → 0 段，VAD 关 → 11 段）。
+        # 「识别不到任何语音」时退回无 VAD 再跑一次，并在 extra 里留痕 ——
+        # 否则下游会以为这素材没台词，白白断掉整条链路。
+        if not segments and self.cfg.vad:
+            segments, info = run(False)
+            vad_fallback = bool(segments)
         elapsed = int((time.time() - t1) * 1000)
+        segs = segments
 
         stat = StageStat(name="asr", provider=self.name, model=self.cfg.model,
                          elapsed_ms=elapsed)
@@ -74,6 +88,7 @@ class FasterWhisperProvider:
             "segments": len(segs),
             "beam_size": self.cfg.beam_size,
             "vad": self.cfg.vad,
+            "vad_fallback": vad_fallback,
             "realtime_factor": round(elapsed / 1000 / max(float(getattr(info, "duration", 0) or 1), 1e-6), 3),
         }
         return ASRResult(language=getattr(info, "language", lang or "unknown"),

@@ -1,0 +1,23 @@
+{
+  "model": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\_work\\models\\lama_fp32.onnx",
+  "model_mb": 208.0,
+  "session_load_ms": 7843,
+  "normalize_trials": [
+    {
+      "normalize": "unit",
+      "ms": 9521.7,
+      "psnr_in": 25.16,
+      "ssim_in": 0.8564,
+      "psnr_out": 99.0,
+      "ssim_out": 1.0
+    },
+    {
+      "normalize": "imagenet",
+      "ms": 8922.0,
+      "psnr_in": 10.98,
+      "ssim_in": 0.5635,
+      "psnr_out": 99.0,
+      "ssim_out": 1.0
+    }
+  ]
+}

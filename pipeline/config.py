@@ -21,12 +21,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def _load_dotenv() -> None:
-    """读项目根目录的 .env（不入库），让 Windows 下配密钥不用改系统环境变量。"""
-    path = ROOT / ".env"
-    if not path.exists():
-        return
-    for line in path.read_text(encoding="utf-8").splitlines():
+def _parse_env_text(text: str) -> None:
+    """把 KEY=VALUE 文本灌进 os.environ（已存在的环境变量优先，不覆盖）。"""
+    for line in text.splitlines():
         line = line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
@@ -35,6 +32,37 @@ def _load_dotenv() -> None:
         v = v.strip().strip("'\"")
         if k and k not in os.environ:
             os.environ[k] = v
+
+
+def _load_dotenv() -> None:
+    """读项目根目录的 .env（不入库），让 Windows 下配密钥不用改系统环境变量。
+
+    支持两种布局（Windows 上手滑容易建成目录，所以两种都收）：
+      1. `.env` 是**文件**      → 经典 dotenv
+      2. `.env` 是**目录**      → 读目录下的 `.env.txt` / `*.txt` / `*.env`
+
+    **读失败绝不许抛异常**：这份文件在 import 期被加载，一旦它坏了
+    （权限、编码、半截文件），整个 pipeline 连 import 都过不去 —— 一次
+    配置问题升级成全项目不可用。所以这里全部吞掉，只记一行日志。
+    """
+    path = ROOT / ".env"
+    try:
+        if path.is_dir():
+            for child in sorted(path.iterdir()):
+                if not child.is_file():
+                    continue
+                if child.suffix.lower() not in (".txt", ".env", ".key", ".ini"):
+                    continue
+                try:
+                    _parse_env_text(child.read_text(encoding="utf-8"))
+                except Exception:
+                    pass
+            return
+        if not path.is_file():
+            return
+        _parse_env_text(path.read_text(encoding="utf-8"))
+    except Exception:
+        pass
 
 
 _load_dotenv()

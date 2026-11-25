@@ -1,0 +1,171 @@
+{
+  "label": "合法搬运·外语→中文字幕+中文配音",
+  "src_lang": "en",
+  "tgt_lang": "zh",
+  "engine": "opencv_telea",
+  "stages": [
+    {
+      "name": "erase",
+      "engine": "opencv_telea",
+      "frames": 751,
+      "fps": 25.0,
+      "elapsed_ms": 91017,
+      "rect": [
+        0,
+        572,
+        1280,
+        688
+      ],
+      "output": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_01\\erased.mp4"
+    },
+    {
+      "name": "asr",
+      "provider": "faster_whisper",
+      "language": "en",
+      "segments": 5,
+      "elapsed_ms": 3402,
+      "degraded": false,
+      "extra": {
+        "model_load_ms": 43538,
+        "detect_language": "en",
+        "language_probability": 1.0,
+        "audio_duration": 30.02,
+        "segments": 5,
+        "beam_size": 1,
+        "vad": true,
+        "vad_fallback": false,
+        "realtime_factor": 0.113,
+        "attempts": []
+      }
+    },
+    {
+      "name": "translate",
+      "provider": "deepseek",
+      "model": "deepseek-chat",
+      "segments": 5,
+      "elapsed_ms": 1046,
+      "degraded": false,
+      "warnings": [],
+      "cost": 252
+    },
+    {
+      "name": "tts",
+      "provider": "edge_tts",
+      "voice": "zh-CN-XiaoxiaoNeural",
+      "segments": 5,
+      "elapsed_ms": 14592,
+      "degraded": false
+    },
+    {
+      "name": "compose_audio",
+      "ok": true,
+      "error": "",
+      "stats": {
+        "segments": 5,
+        "stretched": 5,
+        "overshoot": 4,
+        "max_required_tempo": 0.972,
+        "min_required_tempo": 0.456,
+        "max_applied_tempo": 0.972,
+        "min_applied_tempo": 0.8,
+        "tempo_bounds": [
+          0.8,
+          1.25
+        ],
+        "mean_abs_stretch": 0.1656
+      }
+    },
+    {
+      "name": "mux",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "name": "burn_subtitles",
+      "ok": true,
+      "error": "",
+      "source": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_01\\dub.mp4"
+    },
+    {
+      "name": "burn_subs_only",
+      "ok": true,
+      "error": ""
+    }
+  ],
+  "erased": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_01\\erased.mp4",
+  "ass": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_01\\subtitles.ass",
+  "dub": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_01\\dub.mp4",
+  "final": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_01\\final.mp4",
+  "segments": [
+    {
+      "index": 1,
+      "start": 0.0,
+      "end": 6.0,
+      "src": "the Faculty of Engineering and soon after the Graduate School of Engineering.",
+      "tgt": "工学部，以及随后的工学研究科。"
+    },
+    {
+      "index": 2,
+      "start": 6.0,
+      "end": 14.0,
+      "src": "In the year 2000, the institute's name was changed to Sojo University.",
+      "tgt": "2000年，该校更名为崇城大学。"
+    },
+    {
+      "index": 3,
+      "start": 14.0,
+      "end": 18.0,
+      "src": "With it, the Faculty of Art was established.",
+      "tgt": "随之设立了艺术学部。"
+    },
+    {
+      "index": 4,
+      "start": 18.0,
+      "end": 28.0,
+      "src": "Since 2004, Sojo University has expanded to include the Faculty of Computer and Information Sciences,",
+      "tgt": "自2004年起，崇城大学相继增设了计算机与信息科学学部、"
+    },
+    {
+      "index": 5,
+      "start": 28.0,
+      "end": 30.0,
+      "src": "the Faculty of Biotechnology.",
+      "tgt": "生物技术学部。"
+    }
+  ],
+  "asset": {
+    "id": "S2_01",
+    "desc": "Sojo 大学英文宣传片（日语字幕版）——英语内容 + 真烧录日文字幕",
+    "license": {
+      "name": "CC BY 3.0",
+      "url": "https://creativecommons.org/licenses/by/3.0",
+      "author": "Sojo University",
+      "credit": "File:Introducing Sojo University (English with Japanese subtitles, condensed), via Wikimedia Commons"
+    },
+    "clip": {
+      "start": 30,
+      "dur": 30
+    },
+    "subtitle_lang": "ja"
+  },
+  "detection": {
+    "kind": "bottom_band",
+    "detail": {
+      "found": true,
+      "bands": [
+        16,
+        18
+      ],
+      "y0": 572,
+      "y1": 688,
+      "hit_ratio": 1.0,
+      "mean_ratio": 30.34,
+      "coarse": [
+        572,
+        688
+      ]
+    }
+  },
+  "subs_only": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_01\\subs_only_zh.mp4",
+  "contact_sheet": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S2_01\\contact_sheet.png"
+}

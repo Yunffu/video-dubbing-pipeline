@@ -1,0 +1,24 @@
+{
+  "id": "S2_01",
+  "scenario": "s2",
+  "role": "合法搬运-外语母片",
+  "desc": "Sojo 大学英文宣传片（日语字幕版）——英语内容 + 真烧录日文字幕",
+  "license": {
+    "name": "CC BY 3.0",
+    "url": "https://creativecommons.org/licenses/by/3.0",
+    "author": "Sojo University",
+    "credit": "File:Introducing Sojo University (English with Japanese subtitles, condensed), via Wikimedia Commons"
+  },
+  "source_title": "File:Introducing Sojo University (English with Japanese subtitles, condensed) （英語版大学紹介動画・短篇、日本語字幕入り）.webm",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Introducing_Sojo_University_%28English_with_Japanese_subtitles%2C_condensed%29_%EF%BC%88%E8%8B%B1%E8%AA%9E%E7%89%88%E5%A4%A7%E5%AD%A6%E7%B4%B9%E4%BB%8B%E5%8B%95%E7%94%BB%E3%83%BB%E7%9F%AD%E7%AF%87%E3%80%81%E6%97%A5%E6%9C%AC%E8%AA%9E%E5%AD%97%E5%B9%95%E5%85%A5%E3%82%8A%EF%BC%89.webm",
+  "source_sha256": "cbfeaf2a66eead3542d04b62bc6084e20a351f406d06b148adaae1eeefedf379",
+  "clip": {
+    "start": 30,
+    "dur": 30
+  },
+  "audio_lang": "en",
+  "subtitle_lang": "ja",
+  "notes": "日语字幕带 rows≈899-1016；1920x1080 → 统一降到 1280 宽便于 CPU 处理",
+  "master": "assets/raw/S2_01.mp4",
+  "master_sha256": "f801702faba0512531ad3ea6611f21b9cb79327b05e62ce2e5519f89d530e1db"
+}

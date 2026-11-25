@@ -1,0 +1,24 @@
+{
+  "id": "S2_02",
+  "scenario": "s2",
+  "role": "合法搬运-外语母片",
+  "desc": "Spooky Month Short: Streber's Rehearsal（手绘动画短片）——动画帧 + 烧录英文字幕，是闪烁/拖影最难的一类",
+  "license": {
+    "name": "CC BY 3.0",
+    "url": "https://creativecommons.org/licenses/by/3.0",
+    "author": "Sr Pelo",
+    "credit": "File:Spooky Month Short - Streber's Rehearsal.webm, via Wikimedia Commons"
+  },
+  "source_title": "File:Spooky Month Short - Streber's Rehearsal.webm",
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Spooky_Month_Short_-_Streber%27s_Rehearsal.webm",
+  "source_sha256": "fbd7cda107ac2c9b9964dafbbd0af7a830faa7c5cda8b72c8f8b556aeebecd87",
+  "clip": {
+    "start": 10,
+    "dur": 25
+  },
+  "audio_lang": "en",
+  "subtitle_lang": "en",
+  "notes": "动画 = 逐帧独立修补最容易闪烁/拖影的素材类型",
+  "master": "assets/raw/S2_02.mp4",
+  "master_sha256": "b4f9983ae9efd3a31c42de9cc763d69396f6cb60a2a424cbe3c22a114b23ad42"
+}

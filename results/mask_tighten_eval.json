@@ -1,0 +1,170 @@
+[
+  {
+    "case_id": "M1_01__hard_sub_bottom",
+    "height": 1080,
+    "coarse": {
+      "rect": [
+        0,
+        806,
+        1920,
+        1030
+      ],
+      "area": 0.2074,
+      "recall": 1.0
+    },
+    "tight": {
+      "rect": [
+        0,
+        823,
+        1920,
+        994
+      ],
+      "area": 0.1583,
+      "recall": 0.994
+    },
+    "oracle_rect": [
+      407,
+      822,
+      1511,
+      993
+    ],
+    "psnr": {
+      "coarse": {
+        "psnr_in_mask": 16.84,
+        "ssim_in_mask": 0.765,
+        "psnr_out_mask_delta": 0.0
+      },
+      "tight": {
+        "psnr_in_mask": 17.08,
+        "ssim_in_mask": 0.766,
+        "psnr_out_mask_delta": 0.0
+      }
+    }
+  },
+  {
+    "case_id": "M1_02__hard_sub_bottom",
+    "height": 1920,
+    "coarse": {
+      "rect": [
+        0,
+        1436,
+        1080,
+        1828
+      ],
+      "area": 0.2042,
+      "recall": 1.0
+    },
+    "tight": {
+      "rect": [
+        0,
+        1472,
+        1080,
+        1754
+      ],
+      "area": 0.1469,
+      "recall": 0.928
+    },
+    "oracle_rect": [
+      0,
+      1461,
+      1080,
+      1765
+    ],
+    "psnr": {
+      "coarse": {
+        "psnr_in_mask": 21.89,
+        "ssim_in_mask": 0.773,
+        "psnr_out_mask_delta": 0.0
+      },
+      "tight": {
+        "psnr_in_mask": 16.65,
+        "ssim_in_mask": 0.517,
+        "psnr_out_mask_delta": 0.0
+      }
+    }
+  },
+  {
+    "case_id": "M1_04__hard_sub_bottom",
+    "height": 720,
+    "coarse": {
+      "rect": [
+        0,
+        536,
+        1280,
+        688
+      ],
+      "area": 0.2111,
+      "recall": 1.0
+    },
+    "tight": {
+      "rect": [
+        0,
+        551,
+        1280,
+        660
+      ],
+      "area": 0.1514,
+      "recall": 0.956
+    },
+    "oracle_rect": [
+      271,
+      548,
+      1008,
+      662
+    ],
+    "psnr": {
+      "coarse": {
+        "psnr_in_mask": 16.105,
+        "ssim_in_mask": 0.402,
+        "psnr_out_mask_delta": 0.0
+      },
+      "tight": {
+        "psnr_in_mask": 15.605,
+        "ssim_in_mask": 0.362,
+        "psnr_out_mask_delta": 0.0
+      }
+    }
+  },
+  {
+    "case_id": "M3_01__hard_sub_bottom",
+    "height": 480,
+    "coarse": {
+      "rect": [
+        0,
+        332,
+        654,
+        460
+      ],
+      "area": 0.2667,
+      "recall": 1.0
+    },
+    "tight": {
+      "rect": [
+        0,
+        352,
+        654,
+        439
+      ],
+      "area": 0.1812,
+      "recall": 0.956
+    },
+    "oracle_rect": [
+      32,
+      350,
+      621,
+      441
+    ],
+    "psnr": {
+      "coarse": {
+        "psnr_in_mask": 18.985,
+        "ssim_in_mask": 0.819,
+        "psnr_out_mask_delta": 0.0
+      },
+      "tight": {
+        "psnr_in_mask": 17.32,
+        "ssim_in_mask": 0.727,
+        "psnr_out_mask_delta": 0.0
+      }
+    }
+  }
+]

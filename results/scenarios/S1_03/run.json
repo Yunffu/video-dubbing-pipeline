@@ -1,0 +1,189 @@
+{
+  "label": "赛博出海·中文→英文配音",
+  "src_lang": "zh",
+  "tgt_lang": "en",
+  "engine": "opencv_telea",
+  "stages": [
+    {
+      "name": "erase",
+      "engine": "opencv_telea",
+      "frames": 700,
+      "fps": 25.0,
+      "elapsed_ms": 51322,
+      "rect": [
+        0,
+        332,
+        854,
+        436
+      ],
+      "output": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_03\\erased.mp4"
+    },
+    {
+      "name": "asr",
+      "provider": "faster_whisper",
+      "language": "zh",
+      "segments": 9,
+      "elapsed_ms": 2351,
+      "degraded": false,
+      "extra": {
+        "model_load_ms": 43405,
+        "detect_language": "zh",
+        "language_probability": 1.0,
+        "audio_duration": 28.01,
+        "segments": 9,
+        "beam_size": 1,
+        "vad": true,
+        "vad_fallback": false,
+        "realtime_factor": 0.084,
+        "attempts": []
+      }
+    },
+    {
+      "name": "translate",
+      "provider": "deepseek",
+      "model": "deepseek-chat",
+      "segments": 9,
+      "elapsed_ms": 883,
+      "degraded": false,
+      "warnings": [],
+      "cost": 291
+    },
+    {
+      "name": "tts",
+      "provider": "edge_tts",
+      "voice": "en-US-AriaNeural",
+      "segments": 9,
+      "elapsed_ms": 41969,
+      "degraded": false
+    },
+    {
+      "name": "compose_audio",
+      "ok": true,
+      "error": "",
+      "stats": {
+        "segments": 9,
+        "stretched": 9,
+        "overshoot": 4,
+        "max_required_tempo": 1.692,
+        "min_required_tempo": 0.784,
+        "max_applied_tempo": 1.25,
+        "min_applied_tempo": 0.8,
+        "tempo_bounds": [
+          0.8,
+          1.25
+        ],
+        "mean_abs_stretch": 0.1669
+      }
+    },
+    {
+      "name": "mux",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "name": "burn_subtitles",
+      "ok": true,
+      "error": "",
+      "source": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_03\\dub.mp4"
+    }
+  ],
+  "erased": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_03\\erased.mp4",
+  "ass": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_03\\subtitles.ass",
+  "dub": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_03\\dub.mp4",
+  "final": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_03\\final.mp4",
+  "segments": [
+    {
+      "index": 1,
+      "start": 0.43,
+      "end": 2.03,
+      "src": "但是我想请问你",
+      "tgt": "But I'd like to ask you"
+    },
+    {
+      "index": 2,
+      "start": 2.03,
+      "end": 5.43,
+      "src": "君主立宪便不会流血了",
+      "tgt": "Constitutional monarchy wouldn't shed blood"
+    },
+    {
+      "index": 3,
+      "start": 5.43,
+      "end": 8.43,
+      "src": "觉醒年代是一部优秀的作品",
+      "tgt": "The Awakening Age is an excellent work"
+    },
+    {
+      "index": 4,
+      "start": 8.43,
+      "end": 11.43,
+      "src": "它年仅真实的讲述的历史",
+      "tgt": "It tells history truly and vividly"
+    },
+    {
+      "index": 5,
+      "start": 11.43,
+      "end": 14.43,
+      "src": "很荣幸能够出演中国共产党",
+      "tgt": "It's an honor to play the Communist Party of China"
+    },
+    {
+      "index": 6,
+      "start": 14.43,
+      "end": 17.43,
+      "src": "主要创始人之一陈督秀先生",
+      "tgt": "one of the main founders, Mr. Chen Duxiu"
+    },
+    {
+      "index": 7,
+      "start": 17.43,
+      "end": 21.84,
+      "src": "请支持收看觉醒年代",
+      "tgt": "Please support and watch The Awakening Age"
+    },
+    {
+      "index": 8,
+      "start": 21.84,
+      "end": 23.84,
+      "src": "在香港的文献中心中心",
+      "tgt": "At the Documentation Center in Hong Kong"
+    },
+    {
+      "index": 9,
+      "start": 23.84,
+      "end": 25.84,
+      "src": "综合的一段台中心",
+      "tgt": "A comprehensive segment at the center"
+    }
+  ],
+  "asset": {
+    "id": "S1_03",
+    "desc": "《觉醒年代》香港首映新闻（CNS）——普通话播报 + 真烧录中文字幕",
+    "license": {
+      "name": "CC BY 3.0",
+      "url": "https://creativecommons.org/licenses/by/3.0",
+      "author": "CNS 视频",
+      "credit": "File:电视剧《觉醒年代》香港首映 将以普通话于黄金时段播放.webm, via Wikimedia Commons"
+    },
+    "credit": "File:电视剧《觉醒年代》香港首映 将以普通话于黄金时段播放.webm, via Wikimedia Commons"
+  },
+  "detection": {
+    "kind": "bottom_band",
+    "detail": {
+      "found": true,
+      "bands": [
+        14,
+        17
+      ],
+      "y0": 332,
+      "y1": 436,
+      "hit_ratio": 0.92,
+      "mean_ratio": 97.61,
+      "coarse": [
+        332,
+        436
+      ]
+    }
+  },
+  "contact_sheet": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_03\\contact_sheet.png"
+}

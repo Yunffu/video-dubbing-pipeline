@@ -1,0 +1,217 @@
+{
+  "label": "赛博出海·中文→英文配音",
+  "src_lang": "zh",
+  "tgt_lang": "en",
+  "engine": "opencv_telea",
+  "stages": [
+    {
+      "name": "erase",
+      "engine": "opencv_telea",
+      "frames": 1000,
+      "fps": 25.0,
+      "elapsed_ms": 42746,
+      "rect": [
+        0,
+        404,
+        854,
+        460
+      ],
+      "output": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\erased.mp4"
+    },
+    {
+      "name": "asr",
+      "provider": "faster_whisper",
+      "language": "zh",
+      "segments": 13,
+      "elapsed_ms": 4504,
+      "degraded": false,
+      "extra": {
+        "model_load_ms": 43639,
+        "detect_language": "zh",
+        "language_probability": 1.0,
+        "audio_duration": 40.0,
+        "segments": 13,
+        "beam_size": 1,
+        "vad": true,
+        "vad_fallback": false,
+        "realtime_factor": 0.113,
+        "attempts": []
+      }
+    },
+    {
+      "name": "translate",
+      "provider": "deepseek",
+      "model": "deepseek-chat",
+      "segments": 13,
+      "elapsed_ms": 1563,
+      "degraded": false,
+      "warnings": [],
+      "cost": 430
+    },
+    {
+      "name": "tts",
+      "provider": "edge_tts",
+      "voice": "en-US-AriaNeural",
+      "segments": 13,
+      "elapsed_ms": 41674,
+      "degraded": false
+    },
+    {
+      "name": "compose_audio",
+      "ok": true,
+      "error": "",
+      "stats": {
+        "segments": 13,
+        "stretched": 13,
+        "overshoot": 9,
+        "max_required_tempo": 4.25,
+        "min_required_tempo": 0.519,
+        "max_applied_tempo": 1.25,
+        "min_applied_tempo": 0.8,
+        "tempo_bounds": [
+          0.8,
+          1.25
+        ],
+        "mean_abs_stretch": 0.2385
+      }
+    },
+    {
+      "name": "mux",
+      "ok": true,
+      "error": ""
+    },
+    {
+      "name": "burn_subtitles",
+      "ok": true,
+      "error": "",
+      "source": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\dub.mp4"
+    }
+  ],
+  "erased": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\erased.mp4",
+  "ass": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\subtitles.ass",
+  "dub": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\dub.mp4",
+  "final": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\final.mp4",
+  "segments": [
+    {
+      "index": 1,
+      "start": 0.0,
+      "end": 4.32,
+      "src": "正陽門外小女人也獲得了五項提名,競爭相當激烈",
+      "tgt": "The little woman outside Zhengyangmen also got five nominations, competition was fierce"
+    },
+    {
+      "index": 2,
+      "start": 4.32,
+      "end": 8.2,
+      "src": "當晚,都聽好在表演內講像方面收穫破風",
+      "tgt": "That night, the awards for performance and likeness swept the board"
+    },
+    {
+      "index": 3,
+      "start": 8.2,
+      "end": 13.56,
+      "src": "試驗蘇家負責的尼大紅和郭金飛分別奪得最佳男主角和最佳男配角",
+      "tgt": "The Ni Dahong and Guo Jinfei handled by the Su family won Best Actor and Best Supporting Actor"
+    },
+    {
+      "index": 4,
+      "start": 13.56,
+      "end": 15.84,
+      "src": "尼大紅在接受採訪時表示",
+      "tgt": "Ni Dahong said in an interview"
+    },
+    {
+      "index": 5,
+      "start": 15.84,
+      "end": 19.0,
+      "src": "蘇大強這一夫親形象與以往的都不太一樣",
+      "tgt": "Su Daqiang as a father figure is different from the ones before"
+    },
+    {
+      "index": 6,
+      "start": 19.0,
+      "end": 21.0,
+      "src": "這個夫親太真實了",
+      "tgt": "This father is too real"
+    },
+    {
+      "index": 7,
+      "start": 21.0,
+      "end": 25.72,
+      "src": "他真實,太真實",
+      "tgt": "He's real, too real"
+    },
+    {
+      "index": 8,
+      "start": 25.72,
+      "end": 28.12,
+      "src": "大部分百分之九十多的人都說",
+      "tgt": "Most people, over ninety percent, say"
+    },
+    {
+      "index": 9,
+      "start": 28.12,
+      "end": 30.56,
+      "src": "我們家也有這種情況",
+      "tgt": "Our family has this situation too"
+    },
+    {
+      "index": 10,
+      "start": 30.56,
+      "end": 31.04,
+      "src": "就是說",
+      "tgt": "That is to say"
+    },
+    {
+      "index": 11,
+      "start": 31.04,
+      "end": 32.6,
+      "src": "我從這樣的機率開始",
+      "tgt": "I start from this kind of probability"
+    },
+    {
+      "index": 12,
+      "start": 32.6,
+      "end": 35.36,
+      "src": "當我在表演的時候呢",
+      "tgt": "When I'm performing"
+    },
+    {
+      "index": 13,
+      "start": 35.36,
+      "end": 37.76,
+      "src": "我就沒想刻意的去演什麼",
+      "tgt": "I didn't think about deliberately acting anything"
+    }
+  ],
+  "asset": {
+    "id": "S1_02",
+    "desc": "上海电视节白玉兰奖新闻报道（CNS）——标准普通话播音 + 真烧录中文字幕",
+    "license": {
+      "name": "CC BY 3.0",
+      "url": "https://creativecommons.org/licenses/by/3.0",
+      "author": "CNS 视频",
+      "credit": "File:聚焦上海电视节：倪大红凭“苏大强”获最佳男主角.webm, via Wikimedia Commons"
+    },
+    "credit": "File:聚焦上海电视节：倪大红凭“苏大强”获最佳男主角.webm, via Wikimedia Commons"
+  },
+  "detection": {
+    "kind": "bottom_band",
+    "detail": {
+      "found": true,
+      "bands": [
+        17,
+        18
+      ],
+      "y0": 404,
+      "y1": 460,
+      "hit_ratio": 0.67,
+      "mean_ratio": 9.06,
+      "coarse": [
+        404,
+        460
+      ]
+    }
+  },
+  "contact_sheet": "D:\\ClaudeProjects\\AI应用开发与Agent工具学习\\video-dubbing-pipeline\\results\\scenarios\\S1_02\\contact_sheet.png"
+}

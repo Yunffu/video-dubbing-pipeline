@@ -1,0 +1,456 @@
+{
+  "gt": [
+    {
+      "id": "M1_01__hard_sub_bottom",
+      "rect": [
+        0,
+        806,
+        1920,
+        1030
+      ],
+      "kind": "bottom",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 850.4,
+          "median": {
+            "psnr_in": 16.6,
+            "ssim_in": 0.781,
+            "psnr_out": 99.0,
+            "ssim_out": 0.992
+          },
+          "rtf_720p": 21.26
+        },
+        {
+          "engine": "opencv_ns",
+          "ms_per_frame": 892.7,
+          "median": {
+            "psnr_in": 16.78,
+            "ssim_in": 0.782,
+            "psnr_out": 99.0,
+            "ssim_out": 0.992
+          },
+          "rtf_720p": 22.32
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 7494.5,
+          "median": {
+            "psnr_in": 19.225,
+            "ssim_in": 0.822,
+            "psnr_out": 99.0,
+            "ssim_out": 0.992
+          },
+          "rtf_720p": 187.36
+        }
+      ]
+    },
+    {
+      "id": "M1_01__hard_sub_face",
+      "rect": [
+        745,
+        427,
+        1056,
+        480
+      ],
+      "kind": "face",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 418.0,
+          "median": {
+            "psnr_in": 18.35,
+            "ssim_in": 0.747,
+            "psnr_out": 99.0,
+            "ssim_out": 0.993
+          },
+          "rtf_720p": 10.45
+        },
+        {
+          "engine": "opencv_ns",
+          "ms_per_frame": 446.2,
+          "median": {
+            "psnr_in": 17.43,
+            "ssim_in": 0.765,
+            "psnr_out": 99.0,
+            "ssim_out": 0.993
+          },
+          "rtf_720p": 11.16
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 12878.0,
+          "median": {
+            "psnr_in": 19.215,
+            "ssim_in": 0.802,
+            "psnr_out": 99.0,
+            "ssim_out": 0.993
+          },
+          "rtf_720p": 321.95
+        }
+      ]
+    },
+    {
+      "id": "M1_02__hard_sub_bottom",
+      "rect": [
+        0,
+        1436,
+        1080,
+        1828
+      ],
+      "kind": "bottom",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 954.4,
+          "median": {
+            "psnr_in": 21.925,
+            "ssim_in": 0.763,
+            "psnr_out": 99.0,
+            "ssim_out": 0.993
+          },
+          "rtf_720p": 23.86
+        },
+        {
+          "engine": "opencv_ns",
+          "ms_per_frame": 871.1,
+          "median": {
+            "psnr_in": 21.455,
+            "ssim_in": 0.755,
+            "psnr_out": 99.0,
+            "ssim_out": 0.993
+          },
+          "rtf_720p": 21.78
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 5060.5,
+          "median": {
+            "psnr_in": 16.405,
+            "ssim_in": 0.721,
+            "psnr_out": 99.0,
+            "ssim_out": 0.993
+          },
+          "rtf_720p": 126.51
+        }
+      ]
+    },
+    {
+      "id": "M1_02__hard_sub_face",
+      "rect": [
+        239,
+        965,
+        640,
+        1027
+      ],
+      "kind": "face",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 434.6,
+          "median": {
+            "psnr_in": 22.055,
+            "ssim_in": 0.748,
+            "psnr_out": 99.0,
+            "ssim_out": 0.993
+          },
+          "rtf_720p": 10.86
+        },
+        {
+          "engine": "opencv_ns",
+          "ms_per_frame": 438.3,
+          "median": {
+            "psnr_in": 22.52,
+            "ssim_in": 0.762,
+            "psnr_out": 99.0,
+            "ssim_out": 0.993
+          },
+          "rtf_720p": 10.96
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 4508.9,
+          "median": {
+            "psnr_in": 19.97,
+            "ssim_in": 0.661,
+            "psnr_out": 99.0,
+            "ssim_out": 0.993
+          },
+          "rtf_720p": 112.72
+        }
+      ]
+    },
+    {
+      "id": "M1_04__hard_sub_bottom",
+      "rect": [
+        0,
+        536,
+        1280,
+        688
+      ],
+      "kind": "bottom",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 377.6,
+          "median": {
+            "psnr_in": 16.11,
+            "ssim_in": 0.604,
+            "psnr_out": 99.0,
+            "ssim_out": 0.994
+          },
+          "rtf_720p": 9.44
+        },
+        {
+          "engine": "opencv_ns",
+          "ms_per_frame": 383.1,
+          "median": {
+            "psnr_in": 16.06,
+            "ssim_in": 0.585,
+            "psnr_out": 99.0,
+            "ssim_out": 0.994
+          },
+          "rtf_720p": 9.58
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 4245.7,
+          "median": {
+            "psnr_in": 17.675,
+            "ssim_in": 0.678,
+            "psnr_out": 99.0,
+            "ssim_out": 0.994
+          },
+          "rtf_720p": 106.14
+        }
+      ]
+    },
+    {
+      "id": "M1_04__hard_sub_face",
+      "rect": [
+        478,
+        259,
+        772,
+        306
+      ],
+      "kind": "face",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 201.3,
+          "median": {
+            "psnr_in": 17.095,
+            "ssim_in": 0.624,
+            "psnr_out": 99.0,
+            "ssim_out": 0.994
+          },
+          "rtf_720p": 5.03
+        },
+        {
+          "engine": "opencv_ns",
+          "ms_per_frame": 199.9,
+          "median": {
+            "psnr_in": 16.925,
+            "ssim_in": 0.617,
+            "psnr_out": 99.0,
+            "ssim_out": 0.994
+          },
+          "rtf_720p": 5.0
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 4238.2,
+          "median": {
+            "psnr_in": 20.02,
+            "ssim_in": 0.714,
+            "psnr_out": 99.0,
+            "ssim_out": 0.994
+          },
+          "rtf_720p": 105.95
+        }
+      ]
+    },
+    {
+      "id": "M3_01__hard_sub_bottom",
+      "rect": [
+        0,
+        332,
+        654,
+        460
+      ],
+      "kind": "bottom",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 184.0,
+          "median": {
+            "psnr_in": 18.78,
+            "ssim_in": 0.814,
+            "psnr_out": 99.0,
+            "ssim_out": 0.998
+          },
+          "rtf_720p": 4.6
+        },
+        {
+          "engine": "opencv_ns",
+          "ms_per_frame": 192.1,
+          "median": {
+            "psnr_in": 19.335,
+            "ssim_in": 0.815,
+            "psnr_out": 99.0,
+            "ssim_out": 0.998
+          },
+          "rtf_720p": 4.8
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 2728.1,
+          "median": {
+            "psnr_in": 17.18,
+            "ssim_in": 0.863,
+            "psnr_out": 99.0,
+            "ssim_out": 0.998
+          },
+          "rtf_720p": 68.2
+        }
+      ]
+    },
+    {
+      "id": "M3_01__hard_sub_face",
+      "rect": [
+        142,
+        124,
+        494,
+        179
+      ],
+      "kind": "face",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 133.0,
+          "median": {
+            "psnr_in": 22.475,
+            "ssim_in": 0.922,
+            "psnr_out": 99.0,
+            "ssim_out": 0.998
+          },
+          "rtf_720p": 3.32
+        },
+        {
+          "engine": "opencv_ns",
+          "ms_per_frame": 136.8,
+          "median": {
+            "psnr_in": 22.72,
+            "ssim_in": 0.913,
+            "psnr_out": 99.0,
+            "ssim_out": 0.998
+          },
+          "rtf_720p": 3.42
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 2798.0,
+          "median": {
+            "psnr_in": 23.265,
+            "ssim_in": 0.933,
+            "psnr_out": 99.0,
+            "ssim_out": 0.998
+          },
+          "rtf_720p": 69.95
+        }
+      ]
+    }
+  ],
+  "real": [
+    {
+      "id": "S1_02",
+      "rect": [
+        0,
+        404,
+        854,
+        460
+      ],
+      "detection": "bottom_band",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 219.5,
+          "median": {
+            "psnr_in": 17.85,
+            "ssim_in": 0.808,
+            "psnr_out": 99.0,
+            "ssim_out": 1.0
+          },
+          "flicker_in": 34.068,
+          "flicker_out": 26.758,
+          "flicker_ratio": 1.273,
+          "rtf_720p": 5.49
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 2763.9,
+          "median": {
+            "psnr_in": 24.07,
+            "ssim_in": 0.915,
+            "psnr_out": 99.0,
+            "ssim_out": 1.0
+          },
+          "flicker_in": 35.751,
+          "flicker_out": 26.758,
+          "flicker_ratio": 1.336,
+          "rtf_720p": 69.1
+        }
+      ]
+    },
+    {
+      "id": "S2_01",
+      "rect": [
+        0,
+        572,
+        1280,
+        688
+      ],
+      "detection": "bottom_band",
+      "frames": 8,
+      "results": [
+        {
+          "engine": "opencv_telea",
+          "ms_per_frame": 342.9,
+          "median": {
+            "psnr_in": 11.1,
+            "ssim_in": 0.569,
+            "psnr_out": 99.0,
+            "ssim_out": 1.0
+          },
+          "flicker_in": 62.229,
+          "flicker_out": 61.042,
+          "flicker_ratio": 1.019,
+          "rtf_720p": 8.57
+        },
+        {
+          "engine": "lama_onnx",
+          "ms_per_frame": 4247.4,
+          "median": {
+            "psnr_in": 12.175,
+            "ssim_in": 0.664,
+            "psnr_out": 99.0,
+            "ssim_out": 1.0
+          },
+          "flicker_in": 60.32,
+          "flicker_out": 61.042,
+          "flicker_ratio": 0.988,
+          "rtf_720p": 106.19
+        }
+      ]
+    }
+  ]
+}
