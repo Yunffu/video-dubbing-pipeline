@@ -144,7 +144,8 @@ def main():
     if args.md:
         Path(args.md).parent.mkdir(parents=True, exist_ok=True)
         Path(args.md).write_text(
-            "# 素材入库自检表\n\n> 由 `scripts/probe_media.py` 生成\n\n" + md,
+            "# 素材入库自检表\n\n> 由 `scripts/probe_media.py` 生成\n\n" + md
+            + "\n> 说明：M3 类母版刻意保留低分辨率（超分 SR 的输入），其分辨率 FAIL 属预期。\n",
             encoding="utf-8")
 
 

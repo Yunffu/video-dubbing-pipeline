@@ -13,6 +13,7 @@
     noisy             强背景噪声（ASR 识别率下降）
 """
 import argparse
+import json
 import shutil
 import subprocess
 import sys
@@ -118,9 +119,36 @@ def main():
          "-c:v", "copy", "-c:a", "aac",
          str(outdir / f"{args.name}_noisy.mp4")])
 
+    # 5) 嘴部遮挡（半透明矩形压住画面中下部中央）
+    box_w, box_h = w // 5, h // 6
+    box_x = (w - box_w) // 2
+    box_y = int(h * 0.52)
+    draw = (f"drawbox=x={box_x}:y={box_y}:w={box_w}:h={box_h}:"
+            f"color=black@0.75:t=fill")
+    run(["-i", str(src), "-vf", draw,
+         "-c:v", "libx264", "-crf", "20", "-c:a", "aac",
+         str(outdir / f"{args.name}_mouth_occluded.mp4")])
+
+    derived = [
+        {"type": "hard_sub_bottom", "file": f"{args.name}_hard_sub_bottom.mp4",
+         "purpose": "字幕擦除常规难例", "metric": "字幕区域 mask 内 PSNR/SSIM（对母版）"},
+        {"type": "hard_sub_face", "file": f"{args.name}_hard_sub_face.mp4",
+         "purpose": "字幕压脸边界难例", "metric": "同上看擦除是否伤及人脸"},
+        {"type": "low_bitrate", "file": f"{args.name}_low_bitrate.mp4",
+         "purpose": "超分 SR 的输入", "metric": "SR 前后 PSNR/SSIM（对母版）"},
+        {"type": "noisy", "file": f"{args.name}_noisy.mp4",
+         "purpose": "ASR 识别率下降难例", "metric": "ASR 字符错误率变化"},
+        {"type": "mouth_occluded", "file": f"{args.name}_mouth_occluded.mp4",
+         "purpose": "嘴部遮挡难例（LipSync 崩坏边界）", "metric": "口型同步指标 / 人工 MOS"},
+    ]
+    manifest = {"master": str(src), "master_size": f"{w}x{h}",
+                "duration": dur, "derived": derived}
+    (outdir / f"{args.name}_derived.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+
     print(f"母版（GT）: {src}  {w}x{h}  {dur:.2f}s")
-    for p in sorted(outdir.glob(f"{args.name}_*.mp4")):
-        print(f"  派生: {p.name}")
+    for d in derived:
+        print(f"  派生: {d['file']}  ({d['purpose']})")
 
 
 if __name__ == "__main__":

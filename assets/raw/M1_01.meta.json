@@ -1,0 +1,20 @@
+{
+  "id": "M1_01",
+  "role": "M1",
+  "desc": "户外对话片段（1080p 横屏）——口型同步与多人字幕重叠难例的母版",
+  "license": {
+    "name": "CC BY 3.0",
+    "url": "https://creativecommons.org/licenses/by/3.0",
+    "author": "Canal Madeira",
+    "credit": "File:-3 O Levezinho encontra o amigo.webm, via Wikimedia Commons"
+  },
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/-3_O_Levezinho_encontra_o_amigo.webm",
+  "source_sha256": "36e8febc8671fd8e0c596bd9720f132895ebc012e4b41af8089bb115cc1114a2",
+  "clip": {
+    "start": 0,
+    "dur": 25
+  },
+  "master": "assets/raw/M1_01.mp4",
+  "master_sha256": "a9ced6fba2c762f4263cc2f7cd70edd8a7e31c956e5b27545e059e4eb2162998",
+  "verify": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见"
+}

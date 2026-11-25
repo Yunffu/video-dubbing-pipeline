@@ -1,0 +1,20 @@
+{
+  "id": "M3_01",
+  "role": "M3",
+  "desc": "1982 年 NSA 演讲录像（654x480 老片）——超分 SR / 老片修复 / 字幕擦除的母版",
+  "license": {
+    "name": "Public domain (US Government work, NSA)",
+    "url": "https://commons.wikimedia.org/wiki/File:Grace_Hopper_-_Future_Possibilities_-_Data,_Hardware,_Software,_and_People.webm",
+    "author": "Rear Admiral Grace Hopper / NSA",
+    "credit": "Capt. Grace Hopper on Future Possibilities: Data, Hardware, Software, and People (1982)"
+  },
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/74/Grace_Hopper_-_Future_Possibilities_-_Data%2C_Hardware%2C_Software%2C_and_People.webm",
+  "source_sha256": "ad88ff3623dbf56103f6549a19d73f7fd73cd26b7cf4bccc987344863e2ee1d2",
+  "clip": {
+    "start": 1740,
+    "dur": 25
+  },
+  "master": "assets/raw/M3_01.mp4",
+  "master_sha256": "49305ca9a6b1ce0f52f63572ab695c3a1e3cb4fe2ce14aa0c3576ebcbaf26abe",
+  "verify": "英文人声；选段依据 = scan_segment.py 自动挑最响窗口（mean -23.9 dB）"
+}

@@ -1,0 +1,62 @@
+{
+  "_comment": "素材清单：来源、许可、校验和、切片参数。scripts/fetch_assets.py 按此表确定性重建母版。",
+  "assets": [
+    {
+      "id": "M1_01",
+      "role": "M1",
+      "desc": "户外对话片段（1080p 横屏）——口型同步与多人字幕重叠难例的母版",
+      "source": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/-3_O_Levezinho_encontra_o_amigo.webm",
+        "sha256": "36e8febc8671fd8e0c596bd9720f132895ebc012e4b41af8089bb115cc1114a2",
+        "bytes": 23720823,
+        "ext": ".webm"
+      },
+      "license": {
+        "name": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0",
+        "author": "Canal Madeira",
+        "credit": "File:-3 O Levezinho encontra o amigo.webm, via Wikimedia Commons"
+      },
+      "clip": { "start": 0, "dur": 25 },
+      "verify": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见"
+    },
+    {
+      "id": "M1_02",
+      "role": "M1",
+      "desc": "竖屏采访片段（1080x1920）——竖屏译制场景（电竞/短视频出海向）",
+      "source": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Marina_Smirnova_%C4%89i%C4%89eronas_en_la_muzeo_de_Grigorij_Rasputin.webm",
+        "sha256": "07cbd02264fcd70433a4c2b687364657680fc61007d243a93885dfcf7cd5088a",
+        "bytes": 25340599,
+        "ext": ".webm"
+      },
+      "license": {
+        "name": "CC BY-SA 4.0",
+        "url": "https://creativecommons.org/licenses/by-sa/4.0",
+        "author": "RG72",
+        "credit": "File:Marina Smirnova ĉiĉeronas en la muzeo de Grigorij Rasputin.webm, via Wikimedia Commons"
+      },
+      "clip": { "start": 20, "dur": 25 },
+      "verify": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见（原片整体音量偏低 -37dB，需增益）"
+    },
+    {
+      "id": "M3_01",
+      "role": "M3",
+      "desc": "1982 年 NSA 演讲录像（654x480 老片）——超分 SR / 老片修复 / 字幕擦除的母版",
+      "source": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/7/74/Grace_Hopper_-_Future_Possibilities_-_Data%2C_Hardware%2C_Software%2C_and_People.webm",
+        "sha256": "ad88ff3623dbf56103f6549a19d73f7fd73cd26b7cf4bccc987344863e2ee1d2",
+        "bytes": 121081088,
+        "ext": ".webm"
+      },
+      "license": {
+        "name": "Public domain (US Government work, NSA)",
+        "url": "https://commons.wikimedia.org/wiki/File:Grace_Hopper_-_Future_Possibilities_-_Data,_Hardware,_Software,_and_People.webm",
+        "author": "Rear Admiral Grace Hopper / NSA",
+        "credit": "Capt. Grace Hopper on Future Possibilities: Data, Hardware, Software, and People (1982)"
+      },
+      "clip": { "start": 1740, "dur": 25 },
+      "verify": "英文人声；选段依据 = scan_segment.py 自动挑最响窗口（mean -23.9 dB）"
+    }
+  ]
+}

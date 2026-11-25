@@ -1,0 +1,20 @@
+{
+  "id": "M1_02",
+  "role": "M1",
+  "desc": "竖屏采访片段（1080x1920）——竖屏译制场景（电竞/短视频出海向）",
+  "license": {
+    "name": "CC BY-SA 4.0",
+    "url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "author": "RG72",
+    "credit": "File:Marina Smirnova ĉiĉeronas en la muzeo de Grigorij Rasputin.webm, via Wikimedia Commons"
+  },
+  "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Marina_Smirnova_%C4%89i%C4%89eronas_en_la_muzeo_de_Grigorij_Rasputin.webm",
+  "source_sha256": "07cbd02264fcd70433a4c2b687364657680fc61007d243a93885dfcf7cd5088a",
+  "clip": {
+    "start": 20,
+    "dur": 25
+  },
+  "master": "assets/raw/M1_02.mp4",
+  "master_sha256": "b81d97dc70af60d6842afb525a4ef228b2f2f11027cb027944476df39a7edcb2",
+  "verify": "需人工确认首/中/尾 3 帧：单人正脸、嘴部全程可见（原片整体音量偏低 -37dB，需增益）"
+}
