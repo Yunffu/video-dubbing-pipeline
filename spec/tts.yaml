@@ -1,0 +1,69 @@
+# TTS 环节规格
+stage: tts
+title: 语音合成（目标语字幕 → 配音音频）
+
+input:
+  segments: 目标语字幕段（来自翻译层）
+  language: 目标语种
+  voice: 音色；默认按**文本实际语种**选择
+
+output:
+  type: pipeline.contracts.TTSResult
+  fields: [audio_path, language, voice, segments[{index,text,path,duration,slot_start,slot_end}], stat]
+  invariants:
+    - 每段一个音频文件，duration > 0
+    - segment.index 与字幕段一一对应
+    - 记录每段实际时长（合成层据此做时间轴回贴）
+
+metric:
+  primary:
+    name: 尾部静音时长
+    desc: 每段音频末尾多余静音（秒），过大说明断句/拼接有问题
+    threshold: 0.3
+    threshold_source: C-初版值；人眼标定「停顿是否自然」后校准
+  secondary:
+    - name: 语速偏差
+      desc: (合成时长/原槽位时长 - 1) 的绝对值均值
+      threshold: 0.25
+      threshold_source: 与 compose 的 tempo 上下限一致（0.8~1.25）
+    - name: 音色一致性
+      desc: 人工判定（同一说话人全片是否同一声线）
+      threshold: 人工
+      threshold_source: 人工评价，无自动指标
+    - name: 单段合成耗时
+      threshold: 5000
+      threshold_source: 上游硬约束（批量跑分的墙钟预算）
+
+degrade_allowed:
+  - when: 网络失败/超时（edge-tts 走公网）
+    then: 指数退避重试；仍失败则保留原声、stat.degraded=true
+    must_log: true
+  - when: 文本语种与音色不匹配（英文音色读中文）
+    then: 按文本实际语种自动切音色，并记 voice_switched_segments
+    must_log: true
+    note: 实测 edge-tts 对此直接抛 NoAudioReceived，整批合成全挂 —— 这条不是假设，是踩过的坑
+  - when: 全部后端失败
+    then: 保留原声出片，字幕仍按目标语烧录
+    must_log: true
+  - forbidden: 静默跳过某几段而不留痕
+
+budget:
+  timeout_s: 30
+  max_retries: 2
+  peak_vram_mb: 0
+  cost_cny_per_min_audio: 0   # edge-tts 免费，但依赖公网 → 计入稳定性风险而非成本
+
+cases:
+  must_pass: [M1_01, BLG_00000]
+
+known_limits:
+  - edge-tts 依赖公网微软服务：断网即不可用（对应 JD 场景「服务器突然断网」的兜底路径）
+  - 音色库由微软维护，特定角色音色不可用
+  - 不做音色克隆（IndexTTS2 可做，但本机跑不动 + 授权限制，见检索台账）
+
+implementation:
+  entry: pipeline/tts/edge_tts_provider.py
+  service: pipeline/tts/service.py
+  config: TTS_PROVIDER / TTS_VOICE_ZH / TTS_VOICE_EN / TTS_TIMEOUT / TTS_MAX_RETRIES
+  measured_on: edge-tts 7.3.1
+  measured: 10 段 30s 中文 → 23.9s（每段约 2.4s）

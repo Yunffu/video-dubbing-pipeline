@@ -1,0 +1,75 @@
+# 字幕擦除与重绘环节规格（JD 职责 1 明写的三个技术方向之一）
+stage: subtitle_erase
+title: 硬字幕擦除（把烧录在画面里的原字幕抹掉，为目标语字幕腾位置）
+
+input:
+  video: 含硬字幕的视频
+  mask_source: 字幕框检测结果（band 检测或专用检测器）
+
+output:
+  type: 文件
+  fields: [output_video, stat, detail{scheme, mask_area_ratio, psnr_in_mask, psnr_out_mask}]
+  invariants:
+    - 输出时长/分辨率/帧率与输入一致
+    - 字幕区域被填充，画面其余区域**不得被改动**（防误伤）
+
+metric:
+  primary:
+    name: 字幕区 PSNR
+    desc: 只在字幕 mask 内计算（母版为 GT 的派生件可用；真实素材无 GT → 走人评 + 时序指标）
+    threshold: 30
+    threshold_source: C-初版值；人眼标定「看不出修补痕迹」后校准
+  secondary:
+    - name: 区外 PSNR（防误伤）
+      desc: 字幕框以外区域的 PSNR，必须不低于基线
+      threshold: 不低于原片（无重编码损失）
+      threshold_source: 硬约束
+    - name: 时序稳定性 TWE / TC
+      desc: 相邻帧修补区域的抖动（MFVSR 口径：字幕区/区外分别报）
+      threshold: 待填
+      threshold_source: 需引入光流实现后写死
+    - name: 人工盲评
+      threshold: 人工
+      threshold_source: 人工评价（用户打分表）
+
+degrade_allowed:
+  - when: 方案 B（video-subtitle-remover / ProPainter / STTN）依赖或显存不满足
+    then: 降级到方案 A（OpenCV inpaint，纯 CPU 零依赖）
+    must_log: true
+  - when: 检测不到字幕带
+    then: 原样输出（不擦），并在 detail 里写明「未检出字幕」
+    must_log: true
+  - forbidden: 擦不干净却静默通过（必须把 PSNR/人工结论写进结果）
+
+budget:
+  per_min_video_ms: 300000
+  peak_vram_mb: 0            # 方案 A 纯 CPU
+  cost_cny: 0
+
+cases:
+  must_pass: [M1_01_hard_sub_bottom, M1_04_hard_sub_bottom, M1_04_hard_sub_face]
+  note: 硬字幕 case 来自「合成 GT 法」的派生件（母版 + 烧录字幕 = 可算 PSNR/SSIM）
+
+schemes:                    # 对比表的两列
+  A:
+    name: OpenCV inpaint（TELEA / NS）
+    deps: 仅 cv2
+    vram: 0
+    license: BSD（本项目依赖）
+    pros: 零依赖、可解释、能当基线
+    cons: 无时序一致性，运动镜头会闪
+  B:
+    name: video-subtitle-remover（STTN / LaMa / ProPainter / OpenCV 四模式，Apache-2.0）
+    deps: Python 栈 + 权重
+    vram: 依模式而定（LaMa ONNX 可 CPU；ProPainter 需 CUDA）
+    license: Apache-2.0
+    pros: 有字幕检测 + 多引擎 + 现成指标代码
+    cons: 依赖重、指标为全图口径需改成 mask 加权
+  observed:
+    name: LTX2.3-ICEdit-Insight（扩散式视频编辑）
+    status: 观察项，不进对比表（29GB fp8 权重 + 要求 CUDA，8GB 跑不动）
+
+implementation:
+  detection: scripts/detect_hardsub.py（横带边缘密度法，20 带 + 绝对下限 + 相对倍数）
+  erase: 待补（阶段 2）
+  reference: bilibili 官方视频译制管线 video-dub **不含字幕擦除**（画面流 copy 不重编码）→ 这一步是我们自己加的

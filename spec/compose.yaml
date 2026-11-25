@@ -1,0 +1,58 @@
+# 视频合成环节规格
+stage: compose
+title: 视频合成（画面 + 新音轨 → 成片）
+
+input:
+  video: 原视频（可已被擦除过字幕）
+  audio_track: 逐段 TTS 音频 + 原时间槽位
+  total_duration: 原片时长（用于裁齐）
+
+output:
+  type: 文件
+  fields: [output_video, stat]
+  invariants:
+    - 成片时长与原片时长差 ≤ 0.5s
+    - 视频流 copy（不重编码），音轨 aac 48kHz 立体声
+    - 每段配音落在原时间槽起点（误差 ≤ 1 帧）
+
+metric:
+  primary:
+    name: 时长偏差 |ΔT|
+    desc: 成片时长 - 原片时长的绝对值（秒）
+    threshold: 0.5
+    threshold_source: C-初版值；人眼标定「片尾是否对得上」后校准
+  secondary:
+    - name: 变速段占比
+      desc: 需要变速（|tempo-1|>0.02）的段数占比，衡量译文的「时间适配度」
+      threshold: 0.3
+      threshold_source: C-初版值
+    - name: overshoot 段数
+      desc: 变速幅度超出 [0.8, 1.25] 上限、无法贴合原槽的段数
+      threshold: 0
+      threshold_source: 硬约束（超限说明译文长度不匹配，应回到翻译层改 prompt，而不是硬拉）
+    - name: 失败率（批量口径）
+      threshold: 0.05
+      threshold_source: C-初版值，待批量跑分校准
+
+degrade_allowed:
+  - when: 音轨混流失败（滤镜图错误等）
+    then: 保留原声出片 + stat.degraded=true + 记录 ffmpeg stderr
+    must_log: true
+  - when: 字幕烧录失败（缺 libass / 字体缺失）
+    then: 只输出外挂 .ass/.srt 字幕，不烧录
+    must_log: true
+  - forbidden: 产出无音轨的成片而不报错
+
+budget:
+  per_min_video_ms: 120000
+  peak_vram_mb: 0
+  cost_cny: 0
+
+cases:
+  must_pass: [M1_01, BLG_00000]
+
+implementation:
+  entry: pipeline/compose.py（build_audio_track + mux）
+  subtitle: pipeline/subtitle.py（ASS 生成 + libass 烧录）
+  measured_on: ffmpeg 9.1-essentials（gyan 完整版，含 ffprobe/libass）
+  measured: 30.2s 片段 → 成片 30.02s（差 0.18s），视频流 copy

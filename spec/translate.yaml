@@ -1,0 +1,69 @@
+# 翻译环节规格
+stage: translate
+title: 文本翻译（带时间轴的字幕段 → 目标语字幕段）
+
+input:
+  segments: 带时间轴的字幕段（来自 ASR）
+  source_language: 源语种
+  target_language: 目标语种
+  glossary: 术语表路径（可选，注入 prompt + 离线降级都用）
+
+output:
+  type: pipeline.contracts.TranslationResult
+  fields: [segments[{index,start,end,text}], stat, warnings]
+  invariants:
+    - 输出段数 == 输入段数（一一对应，index 保序）   ← 这条是硬契约，翻译层最常见的坑就是漏行
+    - 时间轴原样保留（不因译文长度改时间轴）
+    - 未解析到的段必须回退原文并写入 warnings，不得静默丢段
+
+metric:
+  primary:
+    name: 段级时长偏差 Δt
+    desc: TTS 实际时长与原槽位时长之差（秒），衡量译文长度是否适配原时间轴
+    threshold: 0.5
+    threshold_source: C-初版值；人眼标定「字幕读起来不赶/不拖」后校准
+  secondary:
+    - name: 术语命中率
+      desc: 术语表中的词在译文中正确出现的比例
+      threshold: 0.95
+      threshold_source: C-初版值
+    - name: 漏解析段数
+      threshold: 0
+      threshold_source: 硬契约（不允许有）
+    - name: 单次请求成本（美元/千段）
+      threshold: 待填
+      threshold_source: 由 eval/cost.py 实测后写死
+
+degrade_allowed:
+  - when: 主后端超时/5xx/429
+    then: 指数退避重试（1.5s×(n+1)），仍失败则切下一后端
+    must_log: true
+  - when: 全部在线后端失败（断网/限流/鉴权失效）
+    then: 切离线降级（术语表替换 + 原文透传），stat.degraded=true 且 warnings 明示「不可对外交付」
+    must_log: true
+  - when: strict 模式下未命中术语表的句子
+    then: 输出空串并计入 strict_miss，不得输出伪译文
+    must_log: true
+  - forbidden: 静默失败；静默把原文当译文而不标 degraded
+
+budget:
+  timeout_s: 30
+  max_retries: 2
+  peak_vram_mb: 0
+  cost_cny_per_min_audio: 待填（由 eval/cost.py 测）
+
+cases:
+  must_pass: [M1_01, BLG_00000]
+
+gateway:                    # 对应「接进公司网关」——凭据只从配置读，日志只记脱敏视图
+  credential_source: env_or_dotenv
+  never_log: [api_key, Authorization header]
+  audit_fields: [timestamp, provider, model, case_id, prompt_tokens, completion_tokens, elapsed_ms]
+  degrade_to_gateway_503: 切离线降级并留痕
+
+implementation:
+  entry: pipeline/translate/openai_compatible.py（任意 OpenAI 兼容端点）
+  service: pipeline/translate/registry.py（deepseek → openai_compatible → offline 自动降级）
+  offline: pipeline/translate/offline.py
+  config: TRANSLATE_PROVIDER / DEEPSEEK_* / OPENAI_* / TRANSLATE_TIMEOUT / TRANSLATE_MAX_RETRIES / TRANSLATE_GLOSSARY / TRANSLATE_OFFLINE_STRICT
+  tests: tests/test_translate.py（19 条离线断言，含降级与漏行回退）

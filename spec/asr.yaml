@@ -1,0 +1,64 @@
+# ASR 环节规格（对齐 JD 职责 3「评估效果、耗时、成本及稳定性」）
+#
+# 这个文件是**约束层**：agent 照它实现，评测器照它判 PASS，人只负责改阈值。
+# 阈值来源字段不可省 —— 面试时「阈值不是拍的」要能拿出依据。
+stage: asr
+title: 语音识别（把画面里的语音变成带时间轴的文本）
+
+input:
+  media: 视频或音频文件路径（本地路径）
+  language: 源语种；auto 表示自动检测
+  prefilter: 可选前置处理（如人声分离 demucs）；默认 none
+
+output:
+  type: pipeline.contracts.ASRResult
+  fields: [language, segments[{index,start,end,text}], stat]
+  invariants:
+    - segments 按 start 升序
+    - segments 的 start/end 落在素材时长内
+    - segments 与输入行数一一对应（后续翻译层依赖保序）
+
+metric:
+  primary:
+    name: CER
+    desc: 字符错误率（对齐后逐字符比较），对 A 类 GT case 用母版字幕做参考
+    threshold: 0.08
+    threshold_source: C-初版值；待「人眼标定 + 数据校准」后写死（人定阈值 → agent 校准）
+    evidence: 待 eval/runner.py 跑分后填入实测值
+  secondary:
+    - name: 噪声下 CER 增幅
+      desc: 加噪派生件相对母版的 CER 增量
+      threshold: 0.05
+      threshold_source: C-初版值
+    - name: 实时因子 RTF
+      desc: 推理墙钟 / 音频时长，衡量能不能批量跑
+      threshold: 1.0
+      threshold_source: 上游硬约束（批量跑分的成本底线）
+
+degrade_allowed:
+  - when: faster-whisper 依赖缺失或权重拉取失败
+    then: 切 openai_whisper（torch CPU 版）
+    must_log: true
+  - when: 全部后端失败
+    then: 返回空 segments + stat.degraded=true + error 原因，流水线终止（下游无输入，硬失败优于产出假数据）
+    must_log: true
+  - forbidden: 静默返回空结果而不标 degraded
+
+budget:
+  per_min_audio_ms: 60000
+  peak_vram_mb: 0          # CPU 推理，不占显存
+  cost_cny: 0             # 本地模型，无 API 账单
+
+cases:
+  must_pass: [M1_01, M1_04, BLG_00000, BLG_00300]
+
+known_limits:               # 已实测的短板，必须写进 badcase 而不是掩盖
+  - 音乐/混响/多人抢话场景错字明显（实测 BLG VLOG：small 档把「开腔」听成「开空腔」）
+  - 本机 torch 是 CPU 版，ASR 只能走 CPU（CTranslate2 Windows 版无 CUDA wheel）
+
+implementation:
+  entry: pipeline/asr/faster_whisper_asr.py
+  service: pipeline/asr/service.py
+  config: ASR_MODEL / ASR_COMPUTE / ASR_DEVICE / ASR_BEAM / ASR_LANGUAGE / ASR_VAD
+  measured_on: RTX4060 Laptop 8GB / CPU only / faster-whisper 1.2.1 / ctranslate2 4.9.1
+  measured: 30.2s 音频 → 10 段，推理 2.2s（RTF≈0.07），模型首次加载 65s

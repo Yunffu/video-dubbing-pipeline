@@ -1,0 +1,100 @@
+# 故障与兜底规格 —— 对应「服务器突然断网，这套 Pipeline 会不会直接挂掉」
+#
+# 核心原则（也是我们和「Demo」的区别）：
+#   1. 任何外部依赖失败，Pipeline 都必须有**明确的下一步**，而不是抛异常终止；
+#   2. 降级必须**留痕**（stat.degraded=true + error + attempts），禁止静默；
+#   3. 断网恢复后要能**续跑**，而不是从头再来（每阶段产物落盘 + 幂等键）。
+#
+# 这份文件是「约束 agent」的具体形态：agent 实现时照它写，不用每次自己判断。
+version: 1
+
+faults:
+  dns_fail:
+    detect: socket.gaierror / URLError(名称解析失败)
+    retry: 2
+    backoff_s: [2, 5]
+    action: 切离线/本地后端；仍失败 → 该环节 degraded
+  connect_timeout:
+    detect: 连接建立超时
+    retry: 2
+    backoff_s: [2, 5]
+    action: 同上
+  read_timeout:
+    detect: 响应读取超时
+    retry: 1
+    backoff_s: [3]
+    action: 切下一后端；记录已用时（超时调用照样计费，成本账单要算进去）
+  http_429:
+    detect: HTTP 429
+    retry: 3
+    backoff_s: [5, 15, 30]
+    action: 尊重 Retry-After；连续触发 → 熔断该后端 60s
+  http_5xx:
+    detect: HTTP 500/502/503/504
+    retry: 2
+    backoff_s: [3, 10]
+    action: 切下一后端
+  auth_401_403:
+    detect: HTTP 401/403
+    retry: 0
+    backoff_s: []
+    action: 不重试（重试无意义），直接切下一后端并报警；凭据问题必须人工处理
+  quota_exhausted:
+    detect: HTTP 402/余额不足类错误
+    retry: 0
+    action: 切离线降级；成本账单标记「因额度中断」
+  network_gone:
+    detect: 运行中网络整体不可达（连续 N 次连接类错误）
+    retry: 0
+    action: **进入离线模式**：TTS 无法合成 → 保留原声出片；翻译走术语表降级；整条流水线继续跑完，产出「降级成片 + 降级报告」
+  corrupt_media:
+    detect: ffprobe 报错 / 解码错误
+    retry: 0
+    action: 用 `ffmpeg -i` 兜底解析；能读则继续，读不出则该 case 标 badcase，不影响其它 case
+  bad_metadata:
+    detect: 时长/帧率/音轨数异常或缺失
+    retry: 0
+    action: 缺失字段按默认值补（fps=25、duration=0），并在 detail 标注「元数据不可信」
+  disk_full:
+    detect: OSError errno 28
+    retry: 0
+    action: 清理中间产物（work/tts 可重生成）；失败则终止并保留已完成阶段的产物
+
+circuit_breaker:
+  window_s: 120
+  fail_threshold: 3          # 窗口内连续失败 3 次 → 打开熔断
+  open_s: 60                 # 熔断打开 60s，期间不再打这个后端
+  half_open_probe: 1        # 半开状态放 1 个探测请求
+  scope: per_provider_per_case_run
+
+degrade_paths:
+  asr:    [faster_whisper, openai_whisper, empty+degraded(终止下游)]
+  translate: [deepseek, openai_compatible, offline_glossary(标记不可交付)]
+  tts:    [edge_tts, keep_original_audio(degraded)]
+  compose: [mix_audio, mux_original_audio(degraded)]
+  lipsync: [wav2lip_onnx, keep_original_frames(degraded)]
+
+observability:
+  must_record: [stage, provider, model, elapsed_ms, degraded, error, attempts]
+  never_record: [api_key, Authorization header, 完整 prompt 中的凭据]
+  audit_to: results/<run_id>/audit.jsonl
+
+resumability:
+  checkpoint_per_stage: true
+  checkpoint_dir: <work_dir>/ckpt
+  idempotency_key: sha256(case_id + stage + input_hash + params_hash)
+  reuse_rule: 命中同 key 的产物直接复用（跑分重跑时省时省钱的关键）
+  must_verify: 复用前校验产物文件存在且非空
+
+cost_accounting_under_failure:
+  - 超时/失败的重试调用**照样计入 token 账单**（这是"降本"必须先算清的部分）
+  - 降级成片要记录「因为降级而未完成的质量项」（例如没有新配音 → lip-sync 指标无意义）
+
+fault_injection:
+  entry: scripts/fault_test.py
+  injections: [dns_fail, connect_timeout, read_timeout, http_429, http_5xx, auth_401, network_gone, corrupt_media, bad_metadata]
+  pass_criteria:
+    - 进程不崩溃（非零退出码仅允许出现在「无 ASR 结果」这一种情况）
+    - 每个降级都有 stat.degraded=true 与可读原因
+    - 断网场景仍产出一份可播放成片（降级成片）
+    - 恢复网络后重跑可复用已完成阶段（幂等命中）

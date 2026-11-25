@@ -1,0 +1,81 @@
+# 口型同步环节规格（JD 职责 1 明写的三个技术方向之一，也是最难的一个）
+stage: lipsync
+title: 口型同步（让画面里人物的嘴跟着新配音动）
+
+input:
+  video: 原视频（或已擦除字幕的视频）
+  audio: 新配音整轨
+  faces: 人脸框（复用 models/face_detection_yunet_2023mar.onnx）
+
+output:
+  type: pipeline.contracts.LipSyncResult
+  fields: [video_path, stat, detail]
+  invariants:
+    - 输出时长与输入一致
+    - 未做人脸的画面不得被改动（无脸则原样 copy）
+
+metric:
+  primary:
+    name: 唇音同步偏移 (ms)
+    desc: 用 SyncNet（joonson/syncnet_python，官方带 CPU-only env）测 AV offset，换算成毫秒
+    threshold: 80
+    threshold_source: C-初版值；人眼标定「什么偏移一眼能看出来」后校准
+  secondary:
+    - name: SyncNet Confidence / LSE-C
+      desc: 同步置信度（Wav2Lip evaluation 口径）
+      threshold: 待填
+      threshold_source: 需实跑 SyncNet 后写死
+    - name: LSE-D
+      desc: 与真实音画对的最短距离，越小越好
+      threshold: 待填
+      threshold_source: 同上
+    - name: 人工 MOS（口型自然度）
+      threshold: 人工
+      threshold_source: 人工评价
+
+degrade_allowed:
+  - when: 方案不可用（显存不足/权重缺失/License 不允许）
+    then: 保留原画面（只换声），stat.degraded=true，detail 写明原因与门槛依据
+    must_log: true
+  - when: 画面无人脸
+    then: 原样 copy，不报失败
+    must_log: true
+  - forbidden: 悄悄不做却报 PASS
+
+budget:
+  per_min_video_ms: 待填（CPU 路线实测 25s 素材 30s~10min，量级差很大）
+  peak_vram_mb: 0            # ONNX CPU 路线
+  cost_cny: 0
+
+cases:
+  must_pass: [M1_04, BLG_00300]     # 有正脸说话人的片段
+
+schemes:
+  A:
+    name: 不做口型生成（能力边界声明）
+    justification:
+      - 官方开源的 bilibili Index-Translate video-dub 画面流是 copy 不重编码 → 官方开源线本身就不做口型
+      - LatentSync 1.6 官方要求 18GB 显存（1.5 才够 8GB）；Wan2.2-S2V 要求 80GB；MuseTalk 锁 torch 2.0.1+cu118
+      - 本机 torch 是 CPU 版，官方方案普遍写死 CUDA
+    role: 正式对照组，不是「不会做」
+  B:
+    name: Wav2Lip ONNX CPU-only
+    license: 上游仅限个人/研究/非商用 → 作品集可用，商用须授权
+    deps: onnxruntime CPU + Haar 级联（注意：opencv 5.0 不再随包发 haar xml，需另下）
+    speed: 25s 素材 30s（缓存人脸检测）~10min（不缓存）
+    risk: 非商用 License
+  C:
+    name: 待定
+    status: 评测器先行（SyncNet），唇形生成作为可选插件接在评测通过之后
+
+evaluation_notes:
+  - 自研「口部 ROI 开合序列 vs 音频能量包络互相关」只能当**交叉验证探针**：
+    译制片的画面嘴型由**原音轨**驱动，与新配音不同源 → 互相关得到的是伪峰，不能当同步指标。
+  - 帧率粒度：25fps 一帧 40ms，要做 <40ms 的亚帧偏移必须插值并声明不确定度。
+  - 元音段才是可靠相关段；爆破音/塞音开口度与音量弱相关。
+  - 静音段两路信号都是噪声底，必须做能量门控并报告「有效对齐时长」。
+
+implementation:
+  metric: eval/metrics.py（SyncNet 封装 + 自研探针）
+  probe: pipeline/lipsync/（自研 ROI 互相关，仅交叉验证）
+  reference: B 站官方博客口径 —— 扩散基座 + 3D VAE + 参考网络注入身份特征 ID（**该技术未开源**）
