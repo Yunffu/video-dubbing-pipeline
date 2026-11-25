@@ -2,7 +2,8 @@
 
 ## 看效果（30 秒版）
 
-成片视频体积大，**不入库**；下载在 [Releases](https://github.com/Yunffu/video-dubbing-pipeline/releases)（附件，不进 git 历史）。
+成片视频体积大，**不入库**；下载在 [Releases v1.0.0](https://github.com/Yunffu/video-dubbing-pipeline/releases/tag/v1.0.0)（附件，不进 git 历史）。
+共 12 个文件 = 4 条场景 × (原片 / 擦除后 / 成片)。
 下面四张接触印相是**入库的证据**，每张 = 原片 / 擦除后 / 成片 三格对比。
 
 | 场景一 · 赛博出海（中文硬字幕 → 擦除 → 英译 → 英配 → 成片） | 场景二 · 合法搬运（外片硬字幕 → 擦除 → 换授权字幕 + 中配） |
