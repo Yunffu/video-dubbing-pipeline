@@ -12,6 +12,7 @@ import urllib.request
 
 from ..config import TranslateConfig
 from ..contracts import StageStat, SubtitleSegment, TranslationResult
+from ..pricing import estimate_usd
 
 SYSTEM_PROMPT = (
     "你是视频字幕本地化译者。把字幕逐条翻译成目标语言，要求：\n"
@@ -121,10 +122,21 @@ class OpenAICompatibleProvider:
                                        text=text, speaker=s.speaker))
 
         stat.elapsed_ms = int((time.time() - started) * 1000)
+        # 成本口径：token → 美元，单价表的唯一来源是 pipeline/pricing.py
+        est = estimate_usd(
+            self.model,
+            prompt_tokens=usage.get("prompt_tokens") or 0,
+            completion_tokens=usage.get("completion_tokens") or 0,
+            cache_hit_tokens=usage.get("prompt_cache_hit_tokens") or 0,
+        )
         stat.extra = {
             "prompt_tokens": usage.get("prompt_tokens"),
             "completion_tokens": usage.get("completion_tokens"),
             "total_tokens": usage.get("total_tokens"),
+            "prompt_cache_hit_tokens": usage.get("prompt_cache_hit_tokens"),
+            "estimated_usd": est["usd"],
+            "pricing": {"canonical_model": est["canonical"], "peak": est["peak"],
+                        "basis": est.get("basis"), "note": est.get("note")},
             "segments_in": len(segments),
             "segments_out": len(out),
             "parsed_lines": len(parsed),

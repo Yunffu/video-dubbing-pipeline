@@ -31,8 +31,14 @@ metric:
       threshold: 0
       threshold_source: 硬契约（不允许有）
     - name: 单次请求成本（美元/千段）
-      threshold: 待填
-      threshold_source: 由 eval/cost.py 实测后写死
+      threshold: 0.02
+      threshold_source: B-实测（2026-11-25，4 次真实 DeepSeek 调用 26 段）
+        实测 $0.0066/千段；阈值取 3 倍余量。口径：eval/cost.py --scan results/scenarios
+        单价表唯一来源 = pipeline/pricing.py（官方定价页 2026-11-25 核实）
+        注：历史 run 只留 total_tokens → 成本按下界计，偏保守
+    - name: 翻译成本（美元/分钟音频）
+      threshold: 0.001
+      threshold_source: B-实测（同上；实测 $0.0000836/分钟音频，阈值取约 12 倍余量）
 
 degrade_allowed:
   - when: 主后端超时/5xx/429
@@ -50,7 +56,15 @@ budget:
   timeout_s: 30
   max_retries: 2
   peak_vram_mb: 0
-  cost_cny_per_min_audio: 待填（由 eval/cost.py 测）
+  cost_usd_per_min_audio: 0.001          # 实测 $0.0000836/分钟音频（B-实测，2026-11-25）
+  cost_usd_per_1k_segments: 0.02         # 实测 $0.0066/千段（B-实测，2026-11-25）
+  peak_hours_utc: [1-4, 6-10]           # DeepSeek 高峰单价 ×2 → 批量作业排到非高峰
+  peak_hours_note: 中国法定节假日无法自动判断 → DEEPSEEK_PEAK_OVERRIDE=0/1 手动覆盖
+  downstream_cost_note: |
+    ASR/TTS 走本地栈（faster-whisper int8 / edge-tts）→ 这两段 $0。
+    反事实：若换成 DeepSeek 官方托管 ASR($0.116/h) + TTS($0.45/万字符)，
+    同一批素材要多花约 $0.0407 —— 是翻译本身（$0.00017）的约 238 倍。
+    结论：压账单的重点不在翻译 Prompt，而在 ASR/TTS 是否托管化 + 缓存 + 分级路由。
 
 cases:
   must_pass: [M1_01, BLG_00000]
