@@ -1,9 +1,12 @@
- __pycache__/
-  *.pyc
-  .venv/
-  env/
-  *.pth
-  *.ckpt
-  *.safetensors
-  models/
-  weights/
+__pycache__/
+*.pyc
+.venv/
+env/
+*.pth
+*.ckpt
+*.safetensors
+models/
+weights/
+
+# 派生素材可由 scripts/make_derived.py 确定性重建，不入库
+assets/derived/
